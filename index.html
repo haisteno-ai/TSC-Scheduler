@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>TSC Scheduler</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --jsu-red: #DC143C;
+            --jsu-white: #FFFFFF;
+            --jsu-gray: #4A4A4A;
+            --jsu-light-gray: #F5F5F5;
+            --jsu-dark: #1a1a1a;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #DC143C 0%, #8B0000 100%);
+            min-height: 100vh;
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border-top: 5px solid var(--jsu-red);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            color: var(--jsu-red);
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+        }
+
+        .gamecock-badge {
+            background: var(--jsu-red);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .current-time {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--jsu-dark);
+            margin-bottom: 5px;
+        }
+
+        .current-date {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .building-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .building-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            background: white;
+            color: #666;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .building-btn.active {
+            background: var(--jsu-red);
+            color: white;
+            border-color: var(--jsu-red);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 20, 60, 0.3);
+        }
+
+        .day-selector {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 5px 0;
+            margin-bottom: 15px;
+        }
+
+        .day-btn {
+            padding: 10px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            background: white;
+            color: #666;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+
+        .day-btn.active {
+            background: var(--jsu-red);
+            color: white;
+            border-color: var(--jsu-red);
+        }
+
+        .filters-section {
+            margin-bottom: 15px;
+        }
+
+        .quick-filters {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 20px;
+            background: white;
+            color: #666;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active {
+            background: var(--jsu-dark);
+            color: white;
+            border-color: var(--jsu-dark);
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .view-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 12px;
+            background: #f0f0f0;
+            color: #666;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .view-btn.active {
+            background: var(--jsu-dark);
+            color: white;
+        }
+
+        .room-search {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .pinned-section {
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--jsu-red);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .rooms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .room-card {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .room-card:active {
+            transform: scale(0.95);
+        }
+
+        .room-card.available {
+            border: 3px solid #4CAF50;
+        }
+
+        .room-card.occupied {
+            border: 3px solid var(--jsu-red);
+        }
+
+        .room-card.pinned {
+            border: 3px solid #FFD700;
+            background: linear-gradient(135deg, #FFFACD 0%, #FFFFFF 100%);
+        }
+
+        .pin-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 4px;
+            line-height: 1;
+            opacity: 0.3;
+            transition: all 0.3s;
+        }
+
+        .pin-btn:hover, .pin-btn.pinned {
+            opacity: 1;
+        }
+
+        .room-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--jsu-dark);
+            margin-bottom: 8px;
+        }
+
+        .room-building {
+            font-size: 11px;
+            color: #999;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .room-status {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        .room-status.available {
+            color: #4CAF50;
+        }
+
+        .room-status.occupied {
+            color: var(--jsu-red);
+        }
+
+        .room-time {
+            font-size: 13px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .room-course {
+            font-size: 11px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 40px;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--jsu-red);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 32px;
+            color: #999;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            line-height: 32px;
+        }
+
+        .schedule-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--jsu-red);
+        }
+
+        .schedule-time {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .schedule-course {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .calendar-export {
+            margin-top: 20px;
+            padding: 20px;
+            background: var(--jsu-light-gray);
+            border-radius: 12px;
+        }
+
+        .calendar-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--jsu-red);
+            margin-bottom: 15px;
+        }
+
+        .duration-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .duration-btn {
+            padding: 8px 16px;
+            border: 2px solid var(--jsu-red);
+            border-radius: 20px;
+            background: white;
+            color: var(--jsu-red);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .duration-btn.active {
+            background: var(--jsu-red);
+            color: white;
+        }
+
+        .export-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            background: var(--jsu-red);
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .export-btn:active {
+            transform: scale(0.98);
+        }
+
+        .no-classes {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+            font-size: 16px;
+        }
+
+        .list-view {
+            display: none;
+        }
+
+        .list-view.active {
+            display: block;
+        }
+
+        .list-room {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .list-room.pinned {
+            border: 3px solid #FFD700;
+            background: linear-gradient(135deg, #FFFACD 0%, #FFFFFF 100%);
+        }
+
+        .list-room-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .list-room-number {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--jsu-dark);
+        }
+
+        .list-room-status {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+
+        .list-room-status.available {
+            background: #e8f5e9;
+            color: #4CAF50;
+        }
+
+        .list-room-status.occupied {
+            background: #ffebee;
+            color: var(--jsu-red);
+        }
+
+        .list-schedule {
+            display: grid;
+            gap: 8px;
+        }
+
+        .list-schedule-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        .list-schedule-time {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .list-schedule-course {
+            color: #666;
+        }
+
+        @media (max-width: 400px) {
+            .rooms-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-section">
+                <h1>TSC SCHEDULER</h1>
+                <div class="gamecock-badge">🐓 JSU</div>
+            </div>
+            <div class="current-time" id="currentTime">--:--</div>
+            <div class="current-date" id="currentDate">Loading...</div>
+            
+            <div class="building-selector">
+                <button class="building-btn active" onclick="selectBuilding('Martin')">Martin</button>
+                <button class="building-btn" onclick="selectBuilding('Merrill')">Merrill</button>
+            </div>
+            
+            <div class="day-selector" id="daySelector"></div>
+            
+            <div class="filters-section">
+                <div class="quick-filters">
+                    <button class="filter-btn" onclick="toggleFilter('available')">Available Now</button>
+                    <button class="filter-btn" onclick="toggleFilter('free30')">Free 30+ min</button>
+                    <button class="filter-btn" onclick="toggleFilter('free60')">Free 60+ min</button>
+                    <button class="filter-btn" onclick="toggleFilter('allDay')">All Day Free</button>
+                </div>
+            </div>
+            
+            <div class="view-toggle">
+                <button class="view-btn active" onclick="switchView('grid')">Grid</button>
+                <button class="view-btn" onclick="switchView('list')">List</button>
+            </div>
+            
+            <input type="text" class="room-search" id="roomSearch" placeholder="Search room number...">
+        </div>
+
+        <div class="pinned-section" id="pinnedSection" style="display:none;">
+            <div class="section-title">⭐ Pinned Rooms</div>
+            <div class="rooms-grid" id="pinnedGrid"></div>
+        </div>
+
+        <div class="section-title" id="allRoomsTitle">All Rooms</div>
+        <div class="rooms-grid" id="roomsGrid"></div>
+        <div class="list-view" id="listView"></div>
+    </div>
+
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">Room 111</div>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="modalSchedule"></div>
+            <div class="calendar-export">
+                <div class="calendar-title">📅 Export Free Times</div>
+                <div class="duration-selector">
+                    <button class="duration-btn active" onclick="selectDuration(30)">30 min</button>
+                    <button class="duration-btn" onclick="selectDuration(60)">1 hour</button>
+                    <button class="duration-btn" onclick="selectDuration(90)">90 min</button>
+                    <button class="duration-btn" onclick="selectDuration(120)">2 hours</button>
+                </div>
+                <button class="export-btn" onclick="exportToCalendar()">Download Calendar (.ics)</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SCHEDULE_DATA = {"Martin": {"Monday": {"111": [{"begin": 745, "end": 945, "course": "BY434"}, {"begin": 745, "end": 945, "course": "BY5034"}, {"begin": 1000, "end": 1100, "course": "BY406"}, {"begin": 1000, "end": 1100, "course": "BY5006"}, {"begin": 1345, "end": 1545, "course": "BY419"}, {"begin": 1345, "end": 1545, "course": "BY5019"}], "122": [{"begin": 845, "end": 945, "course": "BY322"}, {"begin": 1000, "end": 1100, "course": "BY324"}, {"begin": 1115, "end": 1215, "course": "BY283"}, {"begin": 1230, "end": 1330, "course": "BY122"}, {"begin": 1345, "end": 1445, "course": "BY283"}, {"begin": 1500, "end": 1630, "course": "BY101"}], "130": [{"begin": 845, "end": 945, "course": "BY264"}, {"begin": 1000, "end": 1100, "course": "BY263"}, {"begin": 1115, "end": 1215, "course": "BY263"}, {"begin": 1230, "end": 1330, "course": "BY123"}, {"begin": 1345, "end": 1445, "course": "BY121"}], "219": [{"begin": 845, "end": 945, "course": "PHS491"}, {"begin": 845, "end": 945, "course": "PHS5091"}, {"begin": 1000, "end": 1100, "course": "PHS371"}, {"begin": 1345, "end": 1545, "course": "PHS222"}, {"begin": 1900, "end": 2130, "course": "PHS371"}], "234": [{"begin": 845, "end": 945, "course": "PHS201"}, {"begin": 1000, "end": 1100, "course": "GY220"}, {"begin": 1115, "end": 1215, "course": "CY232"}, {"begin": 1230, "end": 1330, "course": "GL241"}, {"begin": 1345, "end": 1445, "course": "PHS201"}], "250": [{"begin": 845, "end": 945, "course": "BY443"}, {"begin": 845, "end": 945, "course": "BY5043"}, {"begin": 1000, "end": 1100, "course": "BY323"}, {"begin": 1115, "end": 1215, "course": "BY463"}, {"begin": 1115, "end": 1215, "course": "BY5063"}, {"begin": 1115, "end": 1215, "course": "CY463"}, {"begin": 1230, "end": 1330, "course": "BY419"}, {"begin": 1230, "end": 1330, "course": "BY5019"}], "307": [{"begin": 845, "end": 945, "course": "AN224"}, {"begin": 1000, "end": 1059, "course": "GL242"}, {"begin": 1115, "end": 1215, "course": "GY366"}, {"begin": 1345, "end": 1445, "course": "AN345"}, {"begin": 1900, "end": 2130, "course": "PHS371"}], "332": [{"begin": 845, "end": 945, "course": "CY363"}, {"begin": 1000, "end": 1100, "course": "CY450"}, {"begin": 1115, "end": 1215, "course": "GY250"}, {"begin": 1230, "end": 1330, "course": "GY251"}, {"begin": 1345, "end": 1445, "course": "BY123"}, {"begin": 1500, "end": 1630, "course": "CY231"}], "336": [{"begin": 845, "end": 945, "course": "BY121"}, {"begin": 1000, "end": 1100, "course": "BY101"}, {"begin": 1115, "end": 1215, "course": "BY101"}, {"begin": 1230, "end": 1330, "course": "BY102"}, {"begin": 1345, "end": 1445, "course": "BY102"}, {"begin": 1500, "end": 1630, "course": "BY472"}, {"begin": 1500, "end": 1630, "course": "BY5072"}], "224": [{"begin": 1000, "end": 1200, "course": "BY104"}, {"begin": 1230, "end": 1430, "course": "BY104"}, {"begin": 1500, "end": 1700, "course": "BY104"}], "228": [{"begin": 1000, "end": 1200, "course": "BY104"}, {"begin": 1230, "end": 1430, "course": "BY104"}], "319": [{"begin": 1000, "end": 1100, "course": "PHS202"}, {"begin": 1115, "end": 1215, "course": "PHS202"}, {"begin": 1230, "end": 1330, "course": "CY106"}, {"begin": 1230, "end": 1330, "course": "CY126"}], "321": [{"begin": 1000, "end": 1200, "course": "BY263"}, {"begin": 1230, "end": 1430, "course": "BY263"}, {"begin": 1500, "end": 1700, "course": "BY263"}], "105": [{"begin": 1100, "end": 1300, "course": "GL244"}, {"begin": 1345, "end": 1545, "course": "GY252"}, {"begin": 1730, "end": 1930, "course": "GY253"}], "203": [{"begin": 1115, "end": 1215, "course": "BY340"}, {"begin": 1615, "end": 1915, "course": "GIS420"}, {"begin": 1615, "end": 1915, "course": "GIS5220"}], "309": [{"begin": 1230, "end": 1430, "course": "BY373"}], "327": [{"begin": 1230, "end": 1430, "course": "BY264"}, {"begin": 1500, "end": 1700, "course": "BY264"}], "202": [{"begin": 1300, "end": 1400, "course": "SSC101"}], "102": [{"begin": 1500, "end": 1630, "course": "BY293"}]}, "Tuesday": {"122": [{"begin": 730, "end": 900, "course": "BY264"}, {"begin": 915, "end": 1045, "course": "BY102"}, {"begin": 1245, "end": 1415, "course": "BY332"}, {"begin": 1430, "end": 1600, "course": "BY264"}], "130": [{"begin": 730, "end": 900, "course": "BY434"}, {"begin": 730, "end": 900, "course": "BY5034"}, {"begin": 915, "end": 1045, "course": "BY263"}, {"begin": 1100, "end": 1230, "course": "BY263"}, {"begin": 1245, "end": 1415, "course": "BY373"}, {"begin": 1430, "end": 1600, "course": "BY263"}], "217": [{"begin": 900, "end": 1100, "course": "PHS203"}, {"begin": 1115, "end": 1315, "course": "PHS203"}, {"begin": 1330, "end": 1530, "course": "PHS203"}], "111": [{"begin": 915, "end": 1115, "course": "BY434"}, {"begin": 915, "end": 1115, "course": "BY5034"}, {"begin": 1430, "end": 1630, "course": "BY332"}], "202": [{"begin": 915, "end": 1045, "course": "CY342"}, {"begin": 1115, "end": 1215, "course": "BY481"}, {"begin": 1115, "end": 1215, "course": "BY5081"}, {"begin": 1245, "end": 1415, "course": "CY411"}, {"begin": 1430, "end": 1600, "course": "GY304"}], "234": [{"begin": 915, "end": 1045, "course": "CY232"}, {"begin": 1400, "end": 1700, "course": "BY498"}, {"begin": 1400, "end": 1700, "course": "CY498"}], "250": [{"begin": 915, "end": 1045, "course": "BY106"}, {"begin": 1245, "end": 1415, "course": "BY373"}, {"begin": 1500, "end": 1630, "course": "BY5133"}], "319": [{"begin": 915, "end": 1045, "course": "CY105"}, {"begin": 915, "end": 1045, "course": "CY125"}, {"begin": 1245, "end": 1415, "course": "GY320"}, {"begin": 1430, "end": 1600, "course": "CY435"}], "327": [{"begin": 915, "end": 1045, "course": "BY260"}, {"begin": 1100, "end": 1300, "course": "BY260"}, {"begin": 1500, "end": 1700, "course": "BY264"}], "332": [{"begin": 915, "end": 1045, "course": "CY106"}, {"begin": 915, "end": 1045, "course": "CY126"}, {"begin": 1100, "end": 1230, "course": "CY105"}, {"begin": 1100, "end": 1230, "course": "CY125"}], "336": [{"begin": 915, "end": 1045, "course": "BY121"}, {"begin": 1245, "end": 1415, "course": "BY122"}, {"begin": 1430, "end": 1600, "course": "BY101"}], "224": [{"begin": 1000, "end": 1200, "course": "BY104"}, {"begin": 1230, "end": 1430, "course": "BY104"}, {"begin": 1500, "end": 1700, "course": "BY104"}, {"begin": 1715, "end": 1915, "course": "BY104"}], "228": [{"begin": 1000, "end": 1200, "course": "BY104"}, {"begin": 1230, "end": 1430, "course": "BY104"}], "219": [{"begin": 1100, "end": 1230, "course": "CY115"}, {"begin": 1430, "end": 1730, "course": "CY115"}], "307": [{"begin": 1100, "end": 1230, "course": "CY421"}, {"begin": 1430, "end": 1600, "course": "GY120"}], "321": [{"begin": 1230, "end": 1430, "course": "BY263"}, {"begin": 1500, "end": 1700, "course": "BY263"}, {"begin": 1715, "end": 1915, "course": "BY263"}], "203": [{"begin": 1300, "end": 1430, "course": "GY307"}, {"begin": 1445, "end": 1545, "course": "UH101"}, {"begin": 1630, "end": 1930, "course": "GIS5550"}, {"begin": 1630, "end": 1930, "course": "GY406"}], "105": [{"begin": 1400, "end": 1600, "course": "GY252"}], "142": [{"begin": 1430, "end": 1600, "course": "AN225"}]}, "Wednesday": {"111": [{"begin": 730, "end": 930, "course": "BY5775"}, {"begin": 1000, "end": 1100, "course": "BY406"}, {"begin": 1000, "end": 1100, "course": "BY5006"}, {"begin": 1345, "end": 1545, "course": "BY463"}, {"begin": 1345, "end": 1545, "course": "BY5063"}, {"begin": 1345, "end": 1545, "course": "CY463"}], "321": [{"begin": 730, "end": 930, "course": "BY263"}, {"begin": 1000, "end": 1200, "course": "BY263"}, {"begin": 1230, "end": 1430, "course": "BY263"}, {"begin": 1500, "end": 1700, "course": "BY263"}, {"begin": 1715, "end": 1915, "course": "BY263"}], "122": [{"begin": 845, "end": 945, "course": "BY322"}, {"begin": 1000, "end": 1100, "course": "BY324"}, {"begin": 1115, "end": 1215, "course": "BY283"}, {"begin": 1230, "end": 1330, "course": "BY122"}, {"begin": 1345, "end": 1445, "course": "BY283"}, {"begin": 1500, "end": 1630, "course": "BY101"}], "130": [{"begin": 845, "end": 945, "course": "BY264"}, {"begin": 1000, "end": 1100, "course": "BY263"}, {"begin": 1115, "end": 1215, "course": "BY263"}, {"begin": 1230, "end": 1330, "course": "BY123"}, {"begin": 1345, "end": 1445, "course": "BY121"}], "219": [{"begin": 845, "end": 945, "course": "PHS491"}, {"begin": 845, "end": 945, "course": "PHS5091"}, {"begin": 1000, "end": 1100, "course": "PHS371"}, {"begin": 1345, "end": 1545, "course": "PHS222"}], "234": [{"begin": 845, "end": 945, "course": "PHS201"}, {"begin": 1000, "end": 1100, "course": "GY220"}, {"begin": 1115, "end": 1215, "course": "CY232"}, {"begin": 1230, "end": 1330, "course": "GL241"}, {"begin": 1345, "end": 1445, "course": "PHS201"}], "250": [{"begin": 845, "end": 945, "course": "BY443"}, {"begin": 845, "end": 945, "course": "BY5043"}, {"begin": 1000, "end": 1100, "course": "BY323"}, {"begin": 1115, "end": 1215, "course": "BY463"}, {"begin": 1115, "end": 1215, "course": "BY5063"}, {"begin": 1115, "end": 1215, "course": "CY463"}, {"begin": 1230, "end": 1330, "course": "BY419"}, {"begin": 1230, "end": 1330, "course": "BY5019"}], "307": [{"begin": 845, "end": 945, "course": "AN224"}, {"begin": 1000, "end": 1059, "course": "GL242"}, {"begin": 1115, "end": 1215, "course": "GY366"}, {"begin": 1345, "end": 1445, "course": "AN345"}], "332": [{"begin": 845, "end": 945, "course": "CY363"}, {"begin": 1000, "end": 1100, "course": "CY450"}, {"begin": 1115, "end": 1215, "course": "GY250"}, {"begin": 1230, "end": 1330, "course": "GY251"}, {"begin": 1345, "end": 1445, "course": "BY123"}, {"begin": 1500, "end": 1630, "course": "CY231"}], "336": [{"begin": 845, "end": 945, "course": "BY121"}, {"begin": 1000, "end": 1100, "course": "BY101"}, {"begin": 1115, "end": 1215, "course": "BY101"}, {"begin": 1230, "end": 1330, "course": "BY102"}, {"begin": 1345, "end": 1445, "course": "BY102"}, {"begin": 1500, "end": 1630, "course": "BY472"}, {"begin": 1500, "end": 1630, "course": "BY5072"}], "217": [{"begin": 1000, "end": 1200, "course": "PHS203"}], "224": [{"begin": 1000, "end": 1200, "course": "BY104"}, {"begin": 1230, "end": 1430, "course": "BY104"}, {"begin": 1500, "end": 1700, "course": "BY104"}, {"begin": 1715, "end": 1915, "course": "BY104"}], "228": [{"begin": 1000, "end": 1200, "course": "BY104"}, {"begin": 1230, "end": 1430, "course": "BY108"}], "309": [{"begin": 1000, "end": 1200, "course": "BY373"}, {"begin": 1345, "end": 1545, "course": "BY373"}], "319": [{"begin": 1000, "end": 1100, "course": "PHS202"}, {"begin": 1115, "end": 1215, "course": "PHS202"}, {"begin": 1230, "end": 1330, "course": "CY106"}, {"begin": 1230, "end": 1330, "course": "CY126"}], "327": [{"begin": 1000, "end": 1200, "course": "BY264"}, {"begin": 1230, "end": 1430, "course": "BY264"}, {"begin": 1500, "end": 1700, "course": "BY264"}], "203": [{"begin": 1115, "end": 1215, "course": "BY340"}], "105": [{"begin": 1400, "end": 1600, "course": "GY252"}, {"begin": 1730, "end": 1930, "course": "GY253"}], "102": [{"begin": 1500, "end": 1630, "course": "BY293"}], "302": [{"begin": 1600, "end": 1900, "course": "GIS408"}, {"begin": 1600, "end": 1900, "course": "GIS5210"}]}, "Thursday": {"122": [{"begin": 730, "end": 900, "course": "BY264"}, {"begin": 915, "end": 1045, "course": "BY102"}, {"begin": 1245, "end": 1415, "course": "BY332"}, {"begin": 1430, "end": 1600, "course": "BY264"}], "130": [{"begin": 730, "end": 900, "course": "BY434"}, {"begin": 730, "end": 900, "course": "BY5034"}, {"begin": 915, "end": 1045, "course": "BY263"}, {"begin": 1100, "end": 1230, "course": "BY263"}, {"begin": 1245, "end": 1415, "course": "BY373"}, {"begin": 1430, "end": 1600, "course": "BY263"}], "321": [{"begin": 730, "end": 930, "course": "BY263"}, {"begin": 1000, "end": 1200, "course": "BY263"}, {"begin": 1230, "end": 1430, "course": "BY263"}, {"begin": 1500, "end": 1700, "course": "BY263"}], "105": [{"begin": 830, "end": 1030, "course": "GY253"}, {"begin": 1100, "end": 1300, "course": "GL243"}, {"begin": 1400, "end": 1600, "course": "GL243"}], "217": [{"begin": 900, "end": 1100, "course": "PHS204"}, {"begin": 1115, "end": 1315, "course": "PHS204"}, {"begin": 1330, "end": 1530, "course": "PHS204"}], "111": [{"begin": 915, "end": 1115, "course": "BY434"}, {"begin": 915, "end": 1115, "course": "BY5034"}, {"begin": 1430, "end": 1630, "course": "BY332"}], "202": [{"begin": 915, "end": 1045, "course": "CY342"}, {"begin": 1245, "end": 1415, "course": "CY411"}, {"begin": 1430, "end": 1600, "course": "GY304"}], "234": [{"begin": 915, "end": 1045, "course": "CY232"}, {"begin": 1400, "end": 1700, "course": "BY498"}, {"begin": 1400, "end": 1700, "course": "CY498"}], "250": [{"begin": 915, "end": 1045, "course": "BY106"}, {"begin": 1245, "end": 1415, "course": "BY373"}, {"begin": 1500, "end": 1630, "course": "BY5133"}], "319": [{"begin": 915, "end": 1045, "course": "CY105"}, {"begin": 915, "end": 1045, "course": "CY125"}, {"begin": 1245, "end": 1415, "course": "GY320"}, {"begin": 1430, "end": 1600, "course": "CY435"}], "327": [{"begin": 915, "end": 1045, "course": "BY260"}, {"begin": 1230, "end": 1430, "course": "BY264"}], "332": [{"begin": 915, "end": 1045, "course": "CY106"}, {"begin": 915, "end": 1045, "course": "CY126"}, {"begin": 1100, "end": 1230, "course": "CY105"}, {"begin": 1100, "end": 1230, "course": "CY125"}], "336": [{"begin": 915, "end": 1045, "course": "BY121"}, {"begin": 1245, "end": 1415, "course": "BY122"}, {"begin": 1430, "end": 1600, "course": "BY101"}], "224": [{"begin": 1000, "end": 1200, "course": "BY104"}, {"begin": 1500, "end": 1700, "course": "BY104"}], "228": [{"begin": 1000, "end": 1200, "course": "BY104"}], "219": [{"begin": 1100, "end": 1230, "course": "CY115"}], "307": [{"begin": 1100, "end": 1230, "course": "CY421"}, {"begin": 1430, "end": 1600, "course": "GY120"}], "203": [{"begin": 1300, "end": 1430, "course": "GY307"}, {"begin": 1630, "end": 1930, "course": "BY5110"}, {"begin": 1630, "end": 1930, "course": "GIS5510"}], "142": [{"begin": 1430, "end": 1600, "course": "AN225"}], "302": [{"begin": 1630, "end": 1930, "course": "GIS5560"}]}, "Friday": {"111": [{"begin": 730, "end": 930, "course": "BY406"}, {"begin": 730, "end": 930, "course": "BY5006"}, {"begin": 1000, "end": 1100, "course": "BY406"}, {"begin": 1000, "end": 1100, "course": "BY5006"}], "122": [{"begin": 845, "end": 945, "course": "BY322"}, {"begin": 1000, "end": 1100, "course": "BY324"}, {"begin": 1115, "end": 1215, "course": "BY283"}, {"begin": 1230, "end": 1330, "course": "BY122"}, {"begin": 1345, "end": 1445, "course": "BY283"}], "130": [{"begin": 845, "end": 945, "course": "BY264"}, {"begin": 1000, "end": 1100, "course": "BY263"}, {"begin": 1115, "end": 1215, "course": "BY263"}, {"begin": 1230, "end": 1330, "course": "BY123"}, {"begin": 1345, "end": 1445, "course": "BY121"}], "219": [{"begin": 845, "end": 945, "course": "PHS491"}, {"begin": 845, "end": 945, "course": "PHS5091"}, {"begin": 1000, "end": 1100, "course": "PHS371"}, {"begin": 1345, "end": 1545, "course": "PHS222"}], "234": [{"begin": 845, "end": 945, "course": "PHS201"}, {"begin": 1000, "end": 1100, "course": "GY220"}, {"begin": 1115, "end": 1215, "course": "CY232"}, {"begin": 1230, "end": 1330, "course": "GL241"}, {"begin": 1345, "end": 1445, "course": "PHS201"}], "250": [{"begin": 845, "end": 945, "course": "BY443"}, {"begin": 845, "end": 945, "course": "BY5043"}, {"begin": 1000, "end": 1100, "course": "BY323"}, {"begin": 1115, "end": 1215, "course": "BY463"}, {"begin": 1115, "end": 1215, "course": "BY5063"}, {"begin": 1115, "end": 1215, "course": "CY463"}, {"begin": 1230, "end": 1330, "course": "BY419"}, {"begin": 1230, "end": 1330, "course": "BY5019"}], "307": [{"begin": 845, "end": 945, "course": "AN224"}, {"begin": 1000, "end": 1059, "course": "GL242"}, {"begin": 1115, "end": 1215, "course": "GY366"}, {"begin": 1345, "end": 1445, "course": "AN345"}], "332": [{"begin": 845, "end": 945, "course": "CY363"}, {"begin": 1000, "end": 1100, "course": "CY450"}, {"begin": 1115, "end": 1215, "course": "GY250"}, {"begin": 1230, "end": 1330, "course": "GY251"}, {"begin": 1345, "end": 1445, "course": "BY123"}], "336": [{"begin": 845, "end": 945, "course": "BY121"}, {"begin": 1000, "end": 1100, "course": "BY101"}, {"begin": 1115, "end": 1215, "course": "BY101"}, {"begin": 1230, "end": 1330, "course": "BY102"}, {"begin": 1345, "end": 1445, "course": "BY102"}], "319": [{"begin": 1000, "end": 1100, "course": "PHS202"}, {"begin": 1115, "end": 1215, "course": "PHS202"}, {"begin": 1230, "end": 1330, "course": "CY106"}, {"begin": 1230, "end": 1330, "course": "CY126"}], "216": [{"begin": 1100, "end": 1159, "course": "BY5101"}], "203": [{"begin": 1115, "end": 1215, "course": "BY340"}], "105": [{"begin": 1345, "end": 1545, "course": "GL244"}]}}, "Merrill": {"Monday": {"B01": [{"begin": 730, "end": 830, "course": "EC 222 ALVAREZ"}, {"begin": 845, "end": 945, "course": "COM 200 STEWART"}, {"begin": 915, "end": 1045, "course": "AE 486 GODBEY"}], "B18": [{"begin": 730, "end": 830, "course": "COM 380 MURPHY"}, {"begin": 845, "end": 945, "course": "COM 400 MURPHY"}, {"begin": 1000, "end": 1100, "course": "COM 304 JOYCE"}, {"begin": 1630, "end": 1800, "course": "AE 252 QUADER"}], "100": [{"begin": 730, "end": 830, "course": "ST 345 LOWE"}, {"begin": 845, "end": 945, "course": "ST 260 LOWE"}, {"begin": 1000, "end": 1100, "course": "FIN 441 BOOZER"}], "105": [{"begin": 730, "end": 830, "course": "CBA 350 WALKER"}, {"begin": 845, "end": 945, "course": "COM 345 STEWART"}], "109": [{"begin": 730, "end": 830, "course": "EC 487 ALVAREZ"}], "115": [{"begin": 730, "end": 830, "course": "MKT 361 SCIUCHETTI"}, {"begin": 845, "end": 945, "course": "MKT 488 SCIUCHETTI"}], "116": [{"begin": 730, "end": 830, "course": "CBA 390 LU"}], "200": [{"begin": 845, "end": 945, "course": "ST 261 TURLEY"}, {"begin": 1000, "end": 1100, "course": "EC 321 ALVAREZ"}], "B10": [{"begin": 1245, "end": 1415, "course": "AE 344 KOCHAN"}, {"begin": 1630, "end": 1800, "course": "PSC 484 HATHAWAY/ISLAM"}], "B02": [{"begin": 1630, "end": 1800, "course": "MKT 492 HATHAWAY"}], "B15": [{"begin": 1630, "end": 1800, "course": "GY 466 SCIUCHETTI"}], "214": [{"begin": 730, "end": 830, "course": "COM 362 JOYCE"}], "218": [{"begin": 730, "end": 830, "course": "SSC 101 HANVEY"}]}, "Tuesday": {}, "Wednesday": {"B01": [{"begin": 730, "end": 830, "course": "EC 222 ALVAREZ"}, {"begin": 845, "end": 945, "course": "COM 200 STEWART"}, {"begin": 915, "end": 1045, "course": "AE 486 GODBEY"}], "B18": [{"begin": 730, "end": 830, "course": "COM 380 MURPHY"}, {"begin": 845, "end": 945, "course": "COM 400 MURPHY"}, {"begin": 1000, "end": 1100, "course": "COM 304 JOYCE"}, {"begin": 1630, "end": 1800, "course": "AE 252 QUADER"}], "100": [{"begin": 730, "end": 830, "course": "ST 345 LOWE"}, {"begin": 845, "end": 945, "course": "ST 260 LOWE"}, {"begin": 1000, "end": 1100, "course": "FIN 441 BOOZER"}], "105": [{"begin": 730, "end": 830, "course": "CBA 350 WALKER"}, {"begin": 845, "end": 945, "course": "COM 345 STEWART"}], "109": [{"begin": 730, "end": 830, "course": "EC 487 ALVAREZ"}], "115": [{"begin": 730, "end": 830, "course": "MKT 361 SCIUCHETTI"}, {"begin": 845, "end": 945, "course": "MKT 488 SCIUCHETTI"}], "116": [{"begin": 730, "end": 830, "course": "CBA 390 LU"}], "200": [{"begin": 845, "end": 945, "course": "ST 261 TURLEY"}, {"begin": 845, "end": 945, "course": "ST 261 TURLEY"}, {"begin": 1000, "end": 1100, "course": "EC 321 ALVAREZ"}], "B10": [{"begin": 1245, "end": 1415, "course": "AE 344 KOCHAN"}, {"begin": 1630, "end": 1800, "course": "PSC 484 HATHAWAY/ISLAM"}], "B02": [{"begin": 1630, "end": 1800, "course": "MKT 492 HATHAWAY"}], "B15": [{"begin": 1630, "end": 1800, "course": "GY 466 SCIUCHETTI"}], "300": [{"begin": 1100, "end": 1230, "course": "AE 393 SHANMUGAM"}]}, "Thursday": {}, "Friday": {"B01": [{"begin": 730, "end": 830, "course": "EC 222 ALVAREZ"}, {"begin": 845, "end": 945, "course": "COM 200 STEWART"}], "B18": [{"begin": 730, "end": 830, "course": "COM 380 MURPHY"}, {"begin": 845, "end": 945, "course": "COM 400 MURPHY"}, {"begin": 1000, "end": 1100, "course": "COM 304 JOYCE"}], "100": [{"begin": 730, "end": 830, "course": "ST 345 LOWE"}, {"begin": 845, "end": 945, "course": "ST 260 LOWE"}, {"begin": 1000, "end": 1100, "course": "FIN 441 BOOZER"}], "105": [{"begin": 730, "end": 830, "course": "CBA 350 WALKER"}, {"begin": 845, "end": 945, "course": "COM 345 STEWART"}], "109": [{"begin": 730, "end": 830, "course": "EC 487 ALVAREZ"}], "115": [{"begin": 730, "end": 830, "course": "MKT 361 SCIUCHETTI"}, {"begin": 845, "end": 945, "course": "MKT 488 SCIUCHETTI"}], "116": [{"begin": 730, "end": 830, "course": "CBA 390 LU"}], "200": [{"begin": 845, "end": 945, "course": "ST 261 TURLEY"}, {"begin": 1000, "end": 1100, "course": "EC 321 ALVAREZ"}]}}};
+
+        let currentBuilding = 'Martin';
+        let currentDay = '';
+        let currentView = 'grid';
+        let currentTime = new Date();
+        let pinnedRooms = JSON.parse(localStorage.getItem('pinnedRooms') || '{}');
+        let activeFilters = [];
+        let selectedDuration = 30;
+        let currentModalRoom = null;
+
+        function init() {
+            currentTime = new Date();
+            updateClock();
+            setInterval(updateClock, 1000);
+            
+            const dayOfWeek = currentTime.getDay();
+            const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+            
+            if (dayOfWeek >= 1 && dayOfWeek <= 5) {
+                currentDay = days[dayOfWeek - 1];
+            } else {
+                currentDay = 'Monday';
+            }
+            
+            renderDaySelector();
+            renderRooms();
+        }
+
+        function updateClock() {
+            currentTime = new Date();
+            const hours = currentTime.getHours().toString().padStart(2, '0');
+            const minutes = currentTime.getMinutes().toString().padStart(2, '0');
+            document.getElementById('currentTime').textContent = `${hours}:${minutes}`;
+            
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDate').textContent = currentTime.toLocaleDateString('en-US', options);
+            
+            if (currentView === 'grid') {
+                renderRooms();
+            } else {
+                renderListView();
+            }
+        }
+
+        function selectBuilding(building) {
+            currentBuilding = building;
+            document.querySelectorAll('.building-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            renderRooms();
+        }
+
+        function renderDaySelector() {
+            const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+            const selector = document.getElementById('daySelector');
+            selector.innerHTML = days.map(day => 
+                `<button class="day-btn ${day === currentDay ? 'active' : ''}" onclick="selectDay('${day}')">${day.substring(0, 3)}</button>`
+            ).join('');
+        }
+
+        function selectDay(day) {
+            currentDay = day;
+            renderDaySelector();
+            if (currentView === 'grid') {
+                renderRooms();
+            } else {
+                renderListView();
+            }
+        }
+
+        function switchView(view) {
+            currentView = view;
+            document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (view === 'grid') {
+                document.getElementById('roomsGrid').style.display = 'grid';
+                document.getElementById('listView').classList.remove('active');
+                document.getElementById('allRoomsTitle').style.display = 'block';
+                renderRooms();
+            } else {
+                document.getElementById('roomsGrid').style.display = 'none';
+                document.getElementById('listView').classList.add('active');
+                document.getElementById('allRoomsTitle').style.display = 'none';
+                renderListView();
+            }
+        }
+
+        function toggleFilter(filter) {
+            const index = activeFilters.indexOf(filter);
+            if (index > -1) {
+                activeFilters.splice(index, 1);
+                event.target.classList.remove('active');
+            } else {
+                activeFilters = [filter];
+                document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                event.target.classList.add('active');
+            }
+            
+            if (currentView === 'grid') {
+                renderRooms();
+            } else {
+                renderListView();
+            }
+        }
+
+        function getCurrentTimeMinutes() {
+            return currentTime.getHours() * 100 + currentTime.getMinutes();
+        }
+
+        function formatTime(time) {
+            const timeStr = time.toString().padStart(4, '0');
+            const hours = parseInt(timeStr.substring(0, 2));
+            const minutes = timeStr.substring(2, 4);
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const displayHours = hours > 12 ? hours - 12 : (hours === 0 ? 12 : hours);
+            return `${displayHours}:${minutes} ${ampm}`;
+        }
+
+        function getRoomStatus(building, roomNumber) {
+            const schedule = SCHEDULE_DATA[building]?.[currentDay]?.[roomNumber];
+            if (!schedule || schedule.length === 0) {
+                return { status: 'available', text: 'No classes', time: '', nextFreeMinutes: 1440 };
+            }
+
+            const now = getCurrentTimeMinutes();
+            
+            for (let i = 0; i < schedule.length; i++) {
+                const cls = schedule[i];
+                if (now >= cls.begin && now < cls.end) {
+                    return {
+                        status: 'occupied',
+                        text: 'In use until',
+                        time: formatTime(cls.end),
+                        course: cls.course,
+                        nextFreeMinutes: 0
+                    };
+                }
+                
+                if (now < cls.begin) {
+                    const freeMinutes = Math.floor((cls.begin - now) / 100) * 60 + (cls.begin % 100) - (now % 100);
+                    return {
+                        status: 'available',
+                        text: 'Free until',
+                        time: formatTime(cls.begin),
+                        course: '',
+                        nextFreeMinutes: freeMinutes
+                    };
+                }
+            }
+            
+            return { status: 'available', text: 'Free rest of day', time: '', nextFreeMinutes: 1440 };
+        }
+
+        function matchesFilter(building, room) {
+            if (activeFilters.length === 0) return true;
+            
+            const status = getRoomStatus(building, room);
+            
+            if (activeFilters.includes('available')) {
+                return status.status === 'available';
+            }
+            if (activeFilters.includes('free30')) {
+                return status.status === 'available' && status.nextFreeMinutes >= 30;
+            }
+            if (activeFilters.includes('free60')) {
+                return status.status === 'available' && status.nextFreeMinutes >= 60;
+            }
+            if (activeFilters.includes('allDay')) {
+                return status.nextFreeMinutes >= 1440;
+            }
+            
+            return true;
+        }
+
+        function togglePin(building, room) {
+            event.stopPropagation();
+            const key = `${building}-${room}`;
+            if (pinnedRooms[key]) {
+                delete pinnedRooms[key];
+            } else {
+                pinnedRooms[key] = true;
+            }
+            localStorage.setItem('pinnedRooms', JSON.stringify(pinnedRooms));
+            
+            if (currentView === 'grid') {
+                renderRooms();
+            } else {
+                renderListView();
+            }
+        }
+
+        function renderRooms() {
+            const searchTerm = document.getElementById('roomSearch').value.toLowerCase();
+            const daySchedule = SCHEDULE_DATA[currentBuilding]?.[currentDay] || {};
+            const rooms = Object.keys(daySchedule).sort((a, b) => {
+                const aNum = parseInt(a.replace(/[^0-9]/g, ''));
+                const bNum = parseInt(b.replace(/[^0-9]/g, ''));
+                return aNum - bNum;
+            });
+            
+            const filteredRooms = rooms.filter(room => 
+                room.includes(searchTerm) && matchesFilter(currentBuilding, room)
+            );
+            
+            const pinnedRoomsList = filteredRooms.filter(room => pinnedRooms[`${currentBuilding}-${room}`]);
+            const unpinnedRoomsList = filteredRooms.filter(room => !pinnedRooms[`${currentBuilding}-${room}`]);
+            
+            // Show/hide pinned section
+            if (pinnedRoomsList.length > 0) {
+                document.getElementById('pinnedSection').style.display = 'block';
+                document.getElementById('pinnedGrid').innerHTML = pinnedRoomsList.map(room => createRoomCard(room, true)).join('');
+            } else {
+                document.getElementById('pinnedSection').style.display = 'none';
+            }
+            
+            const grid = document.getElementById('roomsGrid');
+            grid.innerHTML = unpinnedRoomsList.map(room => createRoomCard(room, false)).join('');
+        }
+
+        function createRoomCard(room, isPinned) {
+            const status = getRoomStatus(currentBuilding, room);
+            return `
+                <div class="room-card ${status.status} ${isPinned ? 'pinned' : ''}" onclick="openRoomDetails('${room}')">
+                    <button class="pin-btn ${isPinned ? 'pinned' : ''}" onclick="togglePin('${currentBuilding}', '${room}')">
+                        ${isPinned ? '⭐' : '☆'}
+                    </button>
+                    <div class="room-building">${currentBuilding}</div>
+                    <div class="room-number">${room}</div>
+                    <div class="room-status ${status.status}">${status.text}</div>
+                    <div class="room-time">${status.time}</div>
+                    ${status.course ? `<div class="room-course">${status.course}</div>` : ''}
+                </div>
+            `;
+        }
+
+        function renderListView() {
+            const searchTerm = document.getElementById('roomSearch').value.toLowerCase();
+            const daySchedule = SCHEDULE_DATA[currentBuilding]?.[currentDay] || {};
+            const rooms = Object.keys(daySchedule).sort((a, b) => {
+                const aNum = parseInt(a.replace(/[^0-9]/g, ''));
+                const bNum = parseInt(b.replace(/[^0-9]/g, ''));
+                return aNum - bNum;
+            });
+            
+            const filteredRooms = rooms.filter(room => 
+                room.includes(searchTerm) && matchesFilter(currentBuilding, room)
+            );
+            
+            const pinnedRoomsList = filteredRooms.filter(room => pinnedRooms[`${currentBuilding}-${room}`]);
+            const unpinnedRoomsList = filteredRooms.filter(room => !pinnedRooms[`${currentBuilding}-${room}`]);
+            
+            const allRooms = [...pinnedRoomsList, ...unpinnedRoomsList];
+            
+            const listView = document.getElementById('listView');
+            listView.innerHTML = allRooms.map(room => {
+                const status = getRoomStatus(currentBuilding, room);
+                const schedule = daySchedule[room] || [];
+                const isPinned = pinnedRooms[`${currentBuilding}-${room}`];
+                
+                return `
+                    <div class="list-room ${isPinned ? 'pinned' : ''}">
+                        <button class="pin-btn ${isPinned ? 'pinned' : ''}" onclick="togglePin('${currentBuilding}', '${room}')">
+                            ${isPinned ? '⭐' : '☆'}
+                        </button>
+                        <div class="list-room-header">
+                            <div class="list-room-number">${currentBuilding} ${room}</div>
+                            <div class="list-room-status ${status.status}">${status.status}</div>
+                        </div>
+                        <div class="list-schedule">
+                            ${schedule.length > 0 ? schedule.map(cls => `
+                                <div class="list-schedule-item">
+                                    <span class="list-schedule-time">${formatTime(cls.begin)} - ${formatTime(cls.end)}</span>
+                                    <span class="list-schedule-course">${cls.course}</span>
+                                </div>
+                            `).join('') : '<div style="text-align:center;color:#999;padding:20px;">No classes scheduled</div>'}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openRoomDetails(roomNumber) {
+            currentModalRoom = roomNumber;
+            document.getElementById('modalTitle').textContent = `${currentBuilding} ${roomNumber}`;
+            
+            const schedule = SCHEDULE_DATA[currentBuilding]?.[currentDay]?.[roomNumber] || [];
+            const modalSchedule = document.getElementById('modalSchedule');
+            
+            if (schedule.length === 0) {
+                modalSchedule.innerHTML = '<div class="no-classes">No classes scheduled for this day</div>';
+            } else {
+                modalSchedule.innerHTML = schedule.map(cls => `
+                    <div class="schedule-item">
+                        <div class="schedule-time">${formatTime(cls.begin)} - ${formatTime(cls.end)}</div>
+                        <div class="schedule-course">${cls.course}</div>
+                    </div>
+                `).join('');
+            }
+            
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        function selectDuration(minutes) {
+            selectedDuration = minutes;
+            document.querySelectorAll('.duration-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function exportToCalendar() {
+            const schedule = SCHEDULE_DATA[currentBuilding]?.[currentDay]?.[currentModalRoom] || [];
+            
+            // Find free time slots
+            const freeSlots = [];
+            const startOfDay = 700;
+            const endOfDay = 2100;
+            
+            if (schedule.length === 0) {
+                freeSlots.push({ begin: startOfDay, end: endOfDay });
+            } else {
+                // Before first class
+                if (schedule[0].begin > startOfDay) {
+                    freeSlots.push({ begin: startOfDay, end: schedule[0].begin });
+                }
+                
+                // Between classes
+                for (let i = 0; i < schedule.length - 1; i++) {
+                    if (schedule[i].end < schedule[i + 1].begin) {
+                        freeSlots.push({ begin: schedule[i].end, end: schedule[i + 1].begin });
+                    }
+                }
+                
+                // After last class
+                if (schedule[schedule.length - 1].end < endOfDay) {
+                    freeSlots.push({ begin: schedule[schedule.length - 1].end, end: endOfDay });
+                }
+            }
+            
+            // Filter by duration
+            const validSlots = freeSlots.filter(slot => {
+                const duration = Math.floor((slot.end - slot.begin) / 100) * 60 + (slot.end % 100) - (slot.begin % 100);
+                return duration >= selectedDuration;
+            });
+            
+            if (validSlots.length === 0) {
+                alert('No free time slots found for the selected duration.');
+                return;
+            }
+            
+            // Generate ICS file
+            const icsContent = generateICS(validSlots);
+            const blob = new Blob([icsContent], { type: 'text/calendar' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${currentBuilding}-${currentModalRoom}-free-times.ics`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function generateICS(freeSlots) {
+            const now = new Date();
+            const dayIndex = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].indexOf(currentDay);
+            
+            // Calculate next occurrence of this day
+            const currentDayIndex = now.getDay();
+            let daysUntilTarget = dayIndex + 1 - currentDayIndex;
+            if (daysUntilTarget <= 0) daysUntilTarget += 7;
+            
+            const targetDate = new Date(now);
+            targetDate.setDate(now.getDate() + daysUntilTarget);
+            
+            let ics = 'BEGIN:VCALENDAR\r\n';
+            ics += 'VERSION:2.0\r\n';
+            ics += 'PRODID:-//TSC Scheduler//EN\r\n';
+            ics += 'CALSCALE:GREGORIAN\r\n';
+            
+            freeSlots.forEach((slot, index) => {
+                const startHour = Math.floor(slot.begin / 100);
+                const startMinute = slot.begin % 100;
+                const endHour = Math.floor(slot.end / 100);
+                const endMinute = slot.end % 100;
+                
+                const startDate = new Date(targetDate);
+                startDate.setHours(startHour, startMinute, 0);
+                
+                const endDate = new Date(targetDate);
+                endDate.setHours(endHour, endMinute, 0);
+                
+                const formatDate = (date) => {
+                    return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+                };
+                
+                ics += 'BEGIN:VEVENT\r\n';
+                ics += `UID:${Date.now()}-${index}@tscscheduler\r\n`;
+                ics += `DTSTAMP:${formatDate(now)}\r\n`;
+                ics += `DTSTART:${formatDate(startDate)}\r\n`;
+                ics += `DTEND:${formatDate(endDate)}\r\n`;
+                ics += `SUMMARY:${currentBuilding} ${currentModalRoom} - Available\r\n`;
+                ics += `DESCRIPTION:Free time slot in ${currentBuilding} Room ${currentModalRoom}\r\n`;
+                ics += `LOCATION:${currentBuilding} ${currentModalRoom}\r\n`;
+                ics += 'END:VEVENT\r\n';
+            });
+            
+            ics += 'END:VCALENDAR\r\n';
+            return ics;
+        }
+
+        document.getElementById('roomSearch').addEventListener('input', () => {
+            if (currentView === 'grid') {
+                renderRooms();
+            } else {
+                renderListView();
+            }
+        });
+
+        document.getElementById('modal').addEventListener('click', (e) => {
+            if (e.target.id === 'modal') {
+                closeModal();
+            }
+        });
+
+        init();
+    </script>
+</body>
+</html>
