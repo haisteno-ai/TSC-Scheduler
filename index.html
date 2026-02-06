@@ -1534,6 +1534,116 @@
         body.newspaper-theme .schedule-time { color: var(--newspaper-black); font-weight: 700; }
         body.newspaper-theme .schedule-course { color: var(--newspaper-gray); }
         body.newspaper-theme .export-btn { background: var(--newspaper-black); color: white; }
+    
+        /* RETRO iOS THEME - Jobs */
+        body.retro-ios-theme {
+            background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+            font-family: 'Helvetica Neue', Helvetica, sans-serif;
+        }
+        body.retro-ios-theme .header {
+            background: linear-gradient(to bottom, #FFFFFF 0%, #E8E8E8 100%);
+            border-top: 1px solid #CCCCCC;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        body.retro-ios-theme h1 { color: #4A90E2; font-weight: 600; }
+        body.retro-ios-theme .current-time { color: #000000; }
+        body.retro-ios-theme .building-btn {
+            background: linear-gradient(to bottom, #FFFFFF 0%, #E8E8E8 100%);
+            border: 1px solid #999999;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        body.retro-ios-theme .building-btn.active {
+            background: linear-gradient(to bottom, #4A90E2 0%, #357ABD 100%);
+            color: white;
+            border-color: #2E5E8E;
+        }
+        body.retro-ios-theme .day-btn {
+            background: linear-gradient(to bottom, #FFFFFF 0%, #E8E8E8 100%);
+            border: 1px solid #999999;
+            border-radius: 8px;
+        }
+        body.retro-ios-theme .day-btn.active {
+            background: linear-gradient(to bottom, #4A90E2 0%, #357ABD 100%);
+            color: white;
+            border-color: #2E5E8E;
+        }
+        body.retro-ios-theme .room-card {
+            background: linear-gradient(to bottom, #FFFFFF 0%, #F5F5F5 100%);
+            border: 1px solid #CCCCCC;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        body.retro-ios-theme .pin-btn::before { content: '⭐'; }
+
+        /* NES THEME - Powerglove */
+        body.nes-theme {
+            background: #000000;
+            font-family: 'Courier New', monospace;
+        }
+        body.nes-theme .header {
+            background: #FFFFFF;
+            border: 4px solid #000000;
+            border-radius: 0;
+            box-shadow: 8px 8px 0 rgba(0,0,0,0.3);
+        }
+        body.nes-theme h1 {
+            color: #FC0000;
+            text-shadow: 4px 4px 0 #000000;
+            font-size: 28px;
+        }
+        body.nes-theme .current-time {
+            color: #000000;
+            font-family: 'Courier New', monospace;
+            font-weight: 900;
+        }
+        body.nes-theme .building-btn {
+            background: #FFFFFF;
+            border: 3px solid #000000;
+            border-radius: 0;
+            font-family: 'Courier New', monospace;
+            font-weight: 900;
+        }
+        body.nes-theme .building-btn.active {
+            background: #FC0000;
+            color: #FFFFFF;
+            border-color: #000000;
+            box-shadow: 4px 4px 0 #000000;
+        }
+        body.nes-theme .day-btn {
+            background: #FFFFFF;
+            border: 3px solid #000000;
+            border-radius: 0;
+        }
+        body.nes-theme .day-btn.active {
+            background: #FC0000;
+            color: #FFFFFF;
+            border-color: #000000;
+        }
+        body.nes-theme .room-card {
+            background: #FFFFFF;
+            border: 4px solid #000000;
+            border-radius: 0;
+            box-shadow: 6px 6px 0 #000000;
+        }
+        body.nes-theme .room-number {
+            color: #FC0000;
+            font-family: 'Courier New', monospace;
+        }
+        body.nes-theme .pin-btn::before { content: '🎮'; }
+
+        /* iOS Web App Scrolling Fix */
+        #betaOverlay {
+            -webkit-overflow-scrolling: touch;
+            overflow-y: scroll;
+        }
+        #betaMenu {
+            max-height: 85vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
     </style>
 </head>
 <body>
