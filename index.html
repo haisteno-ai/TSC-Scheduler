@@ -42,6 +42,9 @@
             --newspaper-black: #1a1a1a;
             --newspaper-white: #F5F5DC;
             --newspaper-gray: #666666;
+            --terminal-bg: #000000;
+            --terminal-green: #33FF33;
+            --terminal-amber: #FFB000;
         }
 
         body {
@@ -166,6 +169,45 @@
 
         body.newspaper-theme * {
             font-family: 'Times New Roman', Georgia, serif;
+        }
+
+        body.terminal-theme {
+            background: var(--terminal-bg);
+            font-family: 'Courier New', 'Courier', monospace;
+            position: relative;
+        }
+
+        body.terminal-theme::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 1000;
+            animation: scanline 8s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(10px); }
+        }
+
+        body.terminal-theme .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        body.terminal-theme * {
+            font-family: 'Courier New', 'Courier', monospace;
         }
 
         header {
@@ -1071,8 +1113,14 @@
             border: 2px solid #ddd;
             border-radius: 8px;
             margin-top: 15px;
-            touch-action: pan-y;
             overflow: hidden;
+            position: relative;
+        }
+
+        .pdf-viewer object {
+            width: 100%;
+            height: 100%;
+            display: block;
         }
 
         @media (max-width: 768px) {
@@ -1080,6 +1128,33 @@
                 height: 400px;
                 border: 1px solid #ddd;
             }
+        }
+
+        .reorder-item {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: move;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.2s;
+        }
+
+        .reorder-item:hover {
+            border-color: var(--jsu-red);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .drag-handle {
+            font-size: 24px;
+            color: #999;
+        }
+
+        .reorder-item.dragging {
+            opacity: 0.5;
         }
 
         /* Beta Menu */
@@ -1354,6 +1429,111 @@
                 padding: 20px;
             }
         }
+
+        /* ========== NEW THEME STYLES ========== */
+        
+        /* Gamecock Pride Theme */
+        body.gamecock-theme header { background: rgba(0, 0, 0, 0.95); border-bottom: 5px solid var(--gamecock-red); box-shadow: 0 0 30px rgba(157, 34, 53, 0.8), inset 0 1px 0 rgba(192, 192, 192, 0.3); }
+        body.gamecock-theme .logo h1 { color: var(--gamecock-white); text-shadow: 3px 3px 0 var(--gamecock-red), 6px 6px 0 var(--gamecock-black), 0 0 30px var(--gamecock-chrome); font-weight: 900; letter-spacing: 3px; }
+        body.gamecock-theme .jsu-badge { background: var(--gamecock-red); color: var(--gamecock-white); border: 2px solid var(--gamecock-chrome); box-shadow: 0 0 15px var(--gamecock-red), inset 0 1px 0 rgba(255,255,255,0.3); font-weight: 900; }
+        body.gamecock-theme .clock { background: rgba(0, 0, 0, 0.9); border: 4px solid var(--gamecock-red); box-shadow: 0 0 30px rgba(157, 34, 53, 0.8), inset 0 0 30px rgba(192, 192, 192, 0.1); }
+        body.gamecock-theme .time { color: var(--gamecock-white); text-shadow: 2px 2px 0 var(--gamecock-red), 4px 4px 0 var(--gamecock-black), 0 0 20px var(--gamecock-chrome); font-weight: 900; }
+        body.gamecock-theme .date { color: var(--gamecock-chrome); font-weight: 700; }
+        body.gamecock-theme .controls { background: rgba(0, 0, 0, 0.9); border: 4px solid var(--gamecock-red); box-shadow: 0 0 30px rgba(157, 34, 53, 0.6), inset 0 0 30px rgba(192, 192, 192, 0.05); }
+        body.gamecock-theme .day-btn { background: rgba(255,255,255,0.1); border-color: var(--gamecock-chrome); color: var(--gamecock-white); }
+        body.gamecock-theme .day-btn.active { background: var(--gamecock-red); color: white; border-color: var(--gamecock-chrome); box-shadow: 0 0 15px var(--gamecock-red); font-weight: 900; }
+        body.gamecock-theme .building-btn { background: rgba(255,255,255,0.1); border-color: var(--gamecock-chrome); color: var(--gamecock-white); }
+        body.gamecock-theme .building-btn.active { background: var(--gamecock-red); color: white; box-shadow: 0 0 15px var(--gamecock-red); font-weight: 900; }
+        body.gamecock-theme .filter-btn { background: rgba(255,255,255,0.1); border-color: var(--gamecock-chrome); color: var(--gamecock-white); }
+        body.gamecock-theme .filter-btn.active { background: var(--gamecock-red); color: white; box-shadow: 0 0 15px var(--gamecock-red); font-weight: 900; }
+        body.gamecock-theme .search-box { background: rgba(255,255,255,0.1); border: 2px solid var(--gamecock-chrome); color: var(--gamecock-white); }
+        body.gamecock-theme .room-card { background: rgba(0, 0, 0, 0.8); border: 3px solid var(--gamecock-red); box-shadow: 0 0 20px rgba(157, 34, 53, 0.4); }
+        body.gamecock-theme .room-name { color: var(--gamecock-white); font-weight: 900; text-shadow: 1px 1px 0 var(--gamecock-red); }
+        body.gamecock-theme .room-info { color: var(--gamecock-chrome); }
+        body.gamecock-theme .modal-content { background: rgba(0, 0, 0, 0.95); border: 4px solid var(--gamecock-red); box-shadow: 0 0 40px rgba(157, 34, 53, 0.8); }
+        body.gamecock-theme .modal-title { color: var(--gamecock-white); text-shadow: 2px 2px 0 var(--gamecock-red); font-weight: 900; }
+        body.gamecock-theme .schedule-item { background: rgba(157, 34, 53, 0.2); border-left-color: var(--gamecock-red); }
+        body.gamecock-theme .schedule-time { color: var(--gamecock-white); font-weight: 900; }
+        body.gamecock-theme .schedule-course { color: var(--gamecock-chrome); }
+        body.gamecock-theme .export-btn { background: var(--gamecock-red); color: white; border: 2px solid var(--gamecock-chrome); box-shadow: 0 0 15px var(--gamecock-red); font-weight: 900; }
+
+        /* Terminal Theme */
+        body.terminal-theme header { background: var(--terminal-bg); border-bottom: 2px solid var(--terminal-green); box-shadow: 0 0 10px var(--terminal-green); }
+        body.terminal-theme .logo h1 { color: var(--terminal-green); text-shadow: 0 0 10px var(--terminal-green); font-weight: 700; animation: terminalGlow 2s ease-in-out infinite alternate; }
+        @keyframes terminalGlow { 0% { text-shadow: 0 0 5px var(--terminal-green); } 100% { text-shadow: 0 0 15px var(--terminal-green), 0 0 25px var(--terminal-green); } }
+        body.terminal-theme .jsu-badge { background: var(--terminal-green); color: var(--terminal-bg); border: 1px solid var(--terminal-green); box-shadow: 0 0 10px var(--terminal-green); font-weight: 700; }
+        body.terminal-theme .clock { background: var(--terminal-bg); border: 2px solid var(--terminal-green); box-shadow: 0 0 15px rgba(51, 255, 51, 0.3), inset 0 0 10px rgba(51, 255, 51, 0.1); }
+        body.terminal-theme .time { color: var(--terminal-green); text-shadow: 0 0 10px var(--terminal-green); font-weight: 700; }
+        body.terminal-theme .date { color: var(--terminal-green); opacity: 0.8; }
+        body.terminal-theme .controls { background: var(--terminal-bg); border: 2px solid var(--terminal-green); box-shadow: 0 0 15px rgba(51, 255, 51, 0.2); }
+        body.terminal-theme .day-btn { background: var(--terminal-bg); border-color: var(--terminal-green); color: var(--terminal-green); }
+        body.terminal-theme .day-btn.active { background: var(--terminal-green); color: var(--terminal-bg); box-shadow: 0 0 10px var(--terminal-green); }
+        body.terminal-theme .building-btn { background: var(--terminal-bg); border-color: var(--terminal-green); color: var(--terminal-green); }
+        body.terminal-theme .building-btn.active { background: var(--terminal-green); color: var(--terminal-bg); box-shadow: 0 0 10px var(--terminal-green); }
+        body.terminal-theme .filter-btn { background: var(--terminal-bg); border-color: var(--terminal-green); color: var(--terminal-green); }
+        body.terminal-theme .filter-btn.active { background: var(--terminal-green); color: var(--terminal-bg); box-shadow: 0 0 10px var(--terminal-green); }
+        body.terminal-theme .search-box { background: var(--terminal-bg); border: 2px solid var(--terminal-green); color: var(--terminal-green); }
+        body.terminal-theme .search-box::placeholder { color: rgba(51, 255, 51, 0.5); }
+        body.terminal-theme .room-card { background: var(--terminal-bg); border: 2px solid var(--terminal-green); box-shadow: 0 0 10px rgba(51, 255, 51, 0.2); }
+        body.terminal-theme .room-name { color: var(--terminal-green); font-weight: 700; }
+        body.terminal-theme .room-info { color: var(--terminal-green); opacity: 0.8; }
+        body.terminal-theme .modal-content { background: var(--terminal-bg); border: 3px solid var(--terminal-green); box-shadow: 0 0 30px rgba(51, 255, 51, 0.4); }
+        body.terminal-theme .modal-title { color: var(--terminal-green); text-shadow: 0 0 10px var(--terminal-green); }
+        body.terminal-theme .schedule-item { background: rgba(51, 255, 51, 0.1); border-left-color: var(--terminal-green); }
+        body.terminal-theme .schedule-time { color: var(--terminal-green); font-weight: 700; }
+        body.terminal-theme .schedule-course { color: var(--terminal-green); opacity: 0.8; }
+        body.terminal-theme .export-btn { background: var(--terminal-green); color: var(--terminal-bg); box-shadow: 0 0 10px var(--terminal-green); }
+
+        /* Minimal Dark Theme */
+        body.minimal-dark-theme header { background: var(--dark-black); border-bottom: 1px solid var(--dark-white); box-shadow: none; }
+        body.minimal-dark-theme .logo h1 { color: var(--dark-white); text-shadow: none; font-weight: 700; }
+        body.minimal-dark-theme .jsu-badge { background: var(--dark-white); color: var(--dark-black); border: none; box-shadow: none; }
+        body.minimal-dark-theme .clock { background: var(--dark-gray); border: 1px solid var(--dark-white); box-shadow: none; }
+        body.minimal-dark-theme .time { color: var(--dark-white); text-shadow: none; font-weight: 700; }
+        body.minimal-dark-theme .date { color: #999; }
+        body.minimal-dark-theme .controls { background: var(--dark-gray); border: 1px solid #333; box-shadow: none; }
+        body.minimal-dark-theme .day-btn { background: var(--dark-gray); border-color: #333; color: var(--dark-white); }
+        body.minimal-dark-theme .day-btn.active { background: var(--dark-white); color: var(--dark-black); border-color: var(--dark-white); }
+        body.minimal-dark-theme .building-btn { background: var(--dark-gray); border-color: #333; color: var(--dark-white); }
+        body.minimal-dark-theme .building-btn.active { background: var(--dark-white); color: var(--dark-black); }
+        body.minimal-dark-theme .filter-btn { background: var(--dark-gray); border-color: #333; color: var(--dark-white); }
+        body.minimal-dark-theme .filter-btn.active { background: var(--dark-white); color: var(--dark-black); }
+        body.minimal-dark-theme .search-box { background: var(--dark-gray); border: 1px solid #333; color: var(--dark-white); }
+        body.minimal-dark-theme .search-box::placeholder { color: #666; }
+        body.minimal-dark-theme .room-card { background: var(--dark-gray); border: 1px solid #333; box-shadow: none; }
+        body.minimal-dark-theme .room-name { color: var(--dark-white); font-weight: 700; }
+        body.minimal-dark-theme .room-info { color: #999; }
+        body.minimal-dark-theme .modal-content { background: var(--dark-gray); border: 1px solid var(--dark-white); box-shadow: none; }
+        body.minimal-dark-theme .modal-title { color: var(--dark-white); }
+        body.minimal-dark-theme .schedule-item { background: #222; border-left-color: var(--dark-white); }
+        body.minimal-dark-theme .schedule-time { color: var(--dark-white); }
+        body.minimal-dark-theme .schedule-course { color: #999; }
+        body.minimal-dark-theme .export-btn { background: var(--dark-white); color: var(--dark-black); }
+
+        /* Newspaper Theme */
+        body.newspaper-theme header { background: var(--newspaper-white); border-bottom: 3px double var(--newspaper-black); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        body.newspaper-theme .logo h1 { color: var(--newspaper-black); text-shadow: none; font-weight: 900; }
+        body.newspaper-theme .jsu-badge { background: var(--newspaper-black); color: var(--newspaper-white); border: 2px solid var(--newspaper-black); box-shadow: none; }
+        body.newspaper-theme .clock { background: white; border: 3px double var(--newspaper-black); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        body.newspaper-theme .time { color: var(--newspaper-black); text-shadow: none; font-weight: 700; }
+        body.newspaper-theme .date { color: var(--newspaper-gray); font-style: italic; }
+        body.newspaper-theme .controls { background: white; border: 3px double var(--newspaper-black); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        body.newspaper-theme .day-btn { background: white; border-color: var(--newspaper-black); color: var(--newspaper-black); border-width: 2px; }
+        body.newspaper-theme .day-btn.active { background: var(--newspaper-black); color: white; }
+        body.newspaper-theme .building-btn { background: white; border-color: var(--newspaper-black); color: var(--newspaper-black); border-width: 2px; }
+        body.newspaper-theme .building-btn.active { background: var(--newspaper-black); color: white; }
+        body.newspaper-theme .filter-btn { background: white; border-color: var(--newspaper-black); color: var(--newspaper-black); border-width: 2px; }
+        body.newspaper-theme .filter-btn.active { background: var(--newspaper-black); color: white; }
+        body.newspaper-theme .search-box { background: white; border: 2px solid var(--newspaper-black); color: var(--newspaper-black); }
+        body.newspaper-theme .room-card { background: white; border: 2px solid var(--newspaper-black); box-shadow: 2px 2px 0 rgba(0,0,0,0.1); }
+        body.newspaper-theme .room-name { color: var(--newspaper-black); font-weight: 900; }
+        body.newspaper-theme .room-info { color: var(--newspaper-gray); }
+        body.newspaper-theme .modal-content { background: var(--newspaper-white); border: 3px double var(--newspaper-black); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        body.newspaper-theme .modal-title { color: var(--newspaper-black); font-weight: 900; }
+        body.newspaper-theme .schedule-item { background: #f5f5f5; border-left-color: var(--newspaper-black); border-left-width: 4px; }
+        body.newspaper-theme .schedule-time { color: var(--newspaper-black); font-weight: 700; }
+        body.newspaper-theme .schedule-course { color: var(--newspaper-gray); }
+        body.newspaper-theme .export-btn { background: var(--newspaper-black); color: white; }
     </style>
 </head>
 <body>
@@ -1450,10 +1630,19 @@
             <div class="profile-select">
                 <h3 style="margin-bottom: 15px;">Select Profile</h3>
                 <button class="profile-btn" onclick="setProfile('default')">Default</button>
-                <button class="profile-btn" onclick="setProfile('haisten')">Haisten (Hacker)</button>
-                <button class="profile-btn" onclick="setProfile('eric')">Eric (Southerners)</button>
-                <button class="profile-btn" onclick="setProfile('jobs')">Jobs (Classic Mac)</button>
+                <button class="profile-btn" onclick="setProfile('hacker')">Hacker</button>
+                <button class="profile-btn" onclick="setProfile('southerners')">Southerners</button>
+                <button class="profile-btn" onclick="setProfile('gamecock')">Gamecock Pride</button>
+                <button class="profile-btn" onclick="setProfile('terminal')">Terminal</button>
+                <button class="profile-btn" onclick="setProfile('minimal')">Minimal Dark</button>
+                <button class="profile-btn" onclick="setProfile('newspaper')">Newspaper</button>
+                <button class="profile-btn" onclick="setProfile('jobs')">Classic Mac</button>
                 <button class="create-profile-btn" onclick="alert('Profile creation coming soon! For now, contact your admin to add custom profiles.')">+ Create New Profile</button>
+            </div>
+
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #ddd;">
+                <h3 style="margin-bottom: 15px;">Reorder Buildings</h3>
+                <button class="export-btn" onclick="openBuildingReorder()">📍 Customize Building Order</button>
             </div>
 
             <button class="export-btn" style="margin-top: 20px;" onclick="closeBeta()">Close</button>
@@ -16085,20 +16274,40 @@
 
         // Profile configurations
         const PROFILES = {
-            'haisten': {
+            'hacker': {
                 primaryBuildings: ['MAH', 'HCL', 'McGee', 'Rowe', 'Brewer', 'Merrill', 'Stone'],
                 theme: 'haisten-theme',
-                name: 'Haisten (Hacker)'
+                name: 'Hacker'
             },
-            'eric': {
+            'southerners': {
                 primaryBuildings: ['Merrill', 'Stone', 'Brewer', 'MAH', 'Rowe', 'HCL', 'McGee'],
                 theme: 'eric-theme',
-                name: 'Eric (Southerners)'
+                name: 'Southerners'
+            },
+            'gamecock': {
+                primaryBuildings: null,
+                theme: 'gamecock-theme',
+                name: 'Gamecock Pride'
+            },
+            'terminal': {
+                primaryBuildings: null,
+                theme: 'terminal-theme',
+                name: 'Terminal'
+            },
+            'minimal': {
+                primaryBuildings: null,
+                theme: 'minimal-dark-theme',
+                name: 'Minimal Dark'
+            },
+            'newspaper': {
+                primaryBuildings: null,
+                theme: 'newspaper-theme',
+                name: 'Newspaper'
             },
             'jobs': {
                 primaryBuildings: null,
                 theme: 'jobs-theme',
-                name: 'Jobs (Classic Mac)'
+                name: 'Classic Mac'
             },
             'default': {
                 primaryBuildings: null,
@@ -16163,7 +16372,12 @@
             let primaryBuildings = [];
             let extraBuildings = [];
             
-            if (profile.primaryBuildings) {
+            // Check for custom user order first
+            if (customBuildingOrder) {
+                // Use custom order
+                primaryBuildings = customBuildingOrder.filter(b => SCHEDULE_DATA[b]).slice(0, 7);
+                extraBuildings = customBuildingOrder.filter(b => SCHEDULE_DATA[b]).slice(7);
+            } else if (profile.primaryBuildings) {
                 // Use profile's primary buildings
                 primaryBuildings = profile.primaryBuildings.filter(b => SCHEDULE_DATA[b]);
                 // Get remaining buildings
@@ -16479,7 +16693,7 @@
                     <div class="av-section">
                         <h3 style="margin-bottom: 10px;">📺 AV Setup Guide</h3>
                         <button class="av-btn" onclick="togglePDF('${roomKey}')">View Instructions</button>
-                        <iframe class="pdf-viewer" id="pdfViewer" style="display: none;"></iframe>
+                        <div class="pdf-viewer" id="pdfViewer" style="display: none;"></div>
                     </div>
                 `;
             }
@@ -16507,18 +16721,27 @@
         }
 
         function togglePDF(roomKey) {
-            const viewer = document.getElementById('pdfViewer');
+            const viewerContainer = document.getElementById('pdfViewer');
             const btn = event.target;
             
-            if (viewer.style.display === 'none') {
+            if (viewerContainer.style.display === 'none') {
                 const page = AV_PAGES[roomKey];
-                // Better mobile parameters: zoom=100 prevents auto-zooming, view=Fit keeps it contained
-                viewer.src = `https://www.jsu.edu/it/docs/classroom-operation-diagrams-011526.pdf#page=${page}&zoom=100&view=Fit&scrollbar=0&toolbar=0&navpanes=0`;
-                viewer.style.display = 'block';
+                // Use object tag for better mobile support and control
+                viewerContainer.innerHTML = `
+                    <object 
+                        data="https://www.jsu.edu/it/docs/classroom-operation-diagrams-011526.pdf#page=${page}"
+                        type="application/pdf"
+                        width="100%"
+                        height="100%"
+                        style="border: none;">
+                        <p>PDF cannot be displayed. <a href="https://www.jsu.edu/it/docs/classroom-operation-diagrams-011526.pdf#page=${page}" target="_blank">Click here to view</a></p>
+                    </object>
+                `;
+                viewerContainer.style.display = 'block';
                 btn.textContent = 'Hide Instructions';
             } else {
-                viewer.style.display = 'none';
-                viewer.src = ''; // Clear to stop loading
+                viewerContainer.innerHTML = ''; // Clear content
+                viewerContainer.style.display = 'none';
                 btn.textContent = 'View Instructions';
             }
         }
@@ -16682,9 +16905,13 @@
                 document.querySelectorAll('.profile-btn').forEach(btn => {
                     btn.classList.remove('active');
                     const btnText = btn.textContent.toLowerCase();
-                    if ((profile === 'haisten' && btnText.includes('haisten')) ||
-                        (profile === 'eric' && btnText.includes('eric')) ||
-                        (profile === 'jobs' && btnText.includes('jobs')) ||
+                    if ((profile === 'hacker' && btnText.includes('hacker')) ||
+                        (profile === 'southerners' && btnText.includes('southerners')) ||
+                        (profile === 'gamecock' && btnText.includes('gamecock')) ||
+                        (profile === 'terminal' && btnText.includes('terminal')) ||
+                        (profile === 'minimal' && btnText.includes('minimal')) ||
+                        (profile === 'newspaper' && btnText.includes('newspaper')) ||
+                        (profile === 'jobs' && btnText.includes('classic')) ||
                         (profile === 'default' && btnText === 'default')) {
                         btn.classList.add('active');
                     }
@@ -16695,10 +16922,121 @@
         // Close modal when clicking outside
         window.onclick = function(event) {
             const modal = document.getElementById('roomModal');
+            const reorderModal = document.getElementById('reorderModal');
             if (event.target === modal) {
                 closeModal();
             }
+            if (event.target === reorderModal) {
+                closeReorder();
+            }
+        }
+
+        // Building Reorder Functions
+        let customBuildingOrder = JSON.parse(localStorage.getItem('customBuildingOrder') || 'null');
+        let draggedBuilding = null;
+
+        function openBuildingReorder() {
+            const buildings = Object.keys(SCHEDULE_DATA).sort();
+            const list = document.getElementById('buildingReorderList');
+            list.innerHTML = '';
+            
+            const orderedBuildings = customBuildingOrder || buildings;
+            
+            orderedBuildings.forEach((building, index) => {
+                if (SCHEDULE_DATA[building]) {
+                    const item = document.createElement('div');
+                    item.className = 'reorder-item';
+                    item.draggable = true;
+                    item.dataset.building = building;
+                    item.innerHTML = `
+                        <span class="drag-handle">☰</span>
+                        <span>${building}</span>
+                    `;
+                    
+                    item.addEventListener('dragstart', handleDragStart);
+                    item.addEventListener('dragover', handleDragOver);
+                    item.addEventListener('drop', handleDrop);
+                    item.addEventListener('dragend', handleDragEnd);
+                    
+                    list.appendChild(item);
+                }
+            });
+            
+            document.getElementById('reorderModal').style.display = 'block';
+            closeBeta();
+        }
+
+        function closeReorder() {
+            document.getElementById('reorderModal').style.display = 'none';
+        }
+
+        function handleDragStart(e) {
+            draggedBuilding = e.target;
+            e.target.style.opacity = '0.4';
+        }
+
+        function handleDragOver(e) {
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
+            e.dataTransfer.dropEffect = 'move';
+            return false;
+        }
+
+        function handleDrop(e) {
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+            
+            if (draggedBuilding !== e.target.closest('.reorder-item')) {
+                const list = document.getElementById('buildingReorderList');
+                const allItems = [...list.querySelectorAll('.reorder-item')];
+                const draggedIndex = allItems.indexOf(draggedBuilding);
+                const targetIndex = allItems.indexOf(e.target.closest('.reorder-item'));
+                
+                if (draggedIndex < targetIndex) {
+                    e.target.closest('.reorder-item').after(draggedBuilding);
+                } else {
+                    e.target.closest('.reorder-item').before(draggedBuilding);
+                }
+            }
+            
+            return false;
+        }
+
+        function handleDragEnd(e) {
+            e.target.style.opacity = '1';
+        }
+
+        function saveReorder() {
+            const list = document.getElementById('buildingReorderList');
+            const items = list.querySelectorAll('.reorder-item');
+            const newOrder = Array.from(items).map(item => item.dataset.building);
+            
+            customBuildingOrder = newOrder;
+            localStorage.setItem('customBuildingOrder', JSON.stringify(newOrder));
+            
+            closeReorder();
+            showExtraBuildings = false;
+            initializeBuildings();
+            
+            alert('Building order saved!');
         }
     </script>
+
+    <!-- Building Reorder Modal -->
+    <div class="modal" id="reorderModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Reorder Buildings</h2>
+                <button class="close-btn" onclick="closeReorder()">&times;</button>
+            </div>
+            <p style="margin-bottom: 20px; color: #666;">Drag and drop to reorder your buildings</p>
+            <div id="buildingReorderList" style="margin-bottom: 20px;">
+                <!-- Buildings will be populated here -->
+            </div>
+            <button class="export-btn" onclick="saveReorder()">Save Order</button>
+        </div>
+    </div>
 </body>
 </html>
