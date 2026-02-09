@@ -45,6 +45,10 @@
             --terminal-bg: #000000;
             --terminal-green: #33FF33;
             --terminal-amber: #FFB000;
+            --ios-gradient-start: #5AC8FA;
+            --ios-gradient-end: #007AFF;
+            --ios-white: #FFFFFF;
+            --ios-gray: #8E8E93;
         }
 
         body {
@@ -208,6 +212,15 @@
 
         body.terminal-theme * {
             font-family: 'Courier New', 'Courier', monospace;
+        }
+
+        body.retro-ios-theme {
+            background: linear-gradient(135deg, var(--ios-gradient-start) 0%, var(--ios-gradient-end) 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Helvetica', sans-serif;
+        }
+
+        body.retro-ios-theme * {
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Helvetica', sans-serif;
         }
 
         header {
@@ -873,6 +886,57 @@
             color: var(--occupied);
         }
 
+        .room-info-header {
+            flex: 1;
+        }
+
+        .room-meta {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .capacity, .room-type {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .room-current-info {
+            font-size: 13px;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .room-equipment {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .equipment-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .equipment-item {
+            font-size: 12px;
+            color: #888;
+            padding: 4px 0;
+            padding-left: 15px;
+            position: relative;
+        }
+
+        .equipment-item::before {
+            content: '•';
+            position: absolute;
+            left: 5px;
+        }
+
         .room-info {
             font-size: 13px;
             color: #666;
@@ -1171,6 +1235,9 @@
             z-index: 3000;
             max-width: 400px;
             width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         body.haisten-theme .beta-menu {
@@ -1534,116 +1601,94 @@
         body.newspaper-theme .schedule-time { color: var(--newspaper-black); font-weight: 700; }
         body.newspaper-theme .schedule-course { color: var(--newspaper-gray); }
         body.newspaper-theme .export-btn { background: var(--newspaper-black); color: white; }
-    
-        /* RETRO iOS THEME - Jobs */
+
+        /* Retro iOS Theme (iOS 6/7 style) - Improved */
         body.retro-ios-theme {
-            background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
-            font-family: 'Helvetica Neue', Helvetica, sans-serif;
+            background: linear-gradient(to bottom, #B0BEC5 0%, #ECEFF1 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', 'Helvetica', sans-serif;
         }
-        body.retro-ios-theme .header {
-            background: linear-gradient(to bottom, #FFFFFF 0%, #E8E8E8 100%);
-            border-top: 1px solid #CCCCCC;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-        }
-        body.retro-ios-theme h1 { color: #4A90E2; font-weight: 600; }
-        body.retro-ios-theme .current-time { color: #000000; }
-        body.retro-ios-theme .building-btn {
-            background: linear-gradient(to bottom, #FFFFFF 0%, #E8E8E8 100%);
-            border: 1px solid #999999;
-            border-radius: 8px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-        }
-        body.retro-ios-theme .building-btn.active {
-            background: linear-gradient(to bottom, #4A90E2 0%, #357ABD 100%);
-            color: white;
-            border-color: #2E5E8E;
-        }
-        body.retro-ios-theme .day-btn {
-            background: linear-gradient(to bottom, #FFFFFF 0%, #E8E8E8 100%);
-            border: 1px solid #999999;
-            border-radius: 8px;
-        }
-        body.retro-ios-theme .day-btn.active {
-            background: linear-gradient(to bottom, #4A90E2 0%, #357ABD 100%);
-            color: white;
-            border-color: #2E5E8E;
-        }
-        body.retro-ios-theme .room-card {
-            background: linear-gradient(to bottom, #FFFFFF 0%, #F5F5F5 100%);
-            border: 1px solid #CCCCCC;
-            border-radius: 10px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-        }
-        body.retro-ios-theme .pin-btn::before { content: '⭐'; }
+        body.retro-ios-theme header { background: rgba(247, 247, 247, 0.98); border-bottom: 1px solid rgba(0,0,0,0.1); box-shadow: 0 1px 0 rgba(255,255,255,0.5), 0 2px 10px rgba(0,0,0,0.05); backdrop-filter: saturate(180%) blur(20px); }
+        body.retro-ios-theme .logo h1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-shadow: none; font-weight: 600; letter-spacing: -0.5px; }
+        body.retro-ios-theme .jsu-badge { background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); }
+        body.retro-ios-theme .clock { background: rgba(255, 255, 255, 0.95); border: none; box-shadow: 0 4px 20px rgba(0,0,0,0.08); backdrop-filter: saturate(180%) blur(20px); }
+        body.retro-ios-theme .time { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-shadow: none; font-weight: 300; }
+        body.retro-ios-theme .date { color: #8e8e93; font-weight: 500; }
+        body.retro-ios-theme .controls { background: rgba(255, 255, 255, 0.95); border: none; box-shadow: 0 4px 20px rgba(0,0,0,0.08); backdrop-filter: saturate(180%) blur(20px); }
+        body.retro-ios-theme .day-btn { background: rgba(102, 126, 234, 0.1); border: none; color: #667eea; border-radius: 10px; font-weight: 500; }
+        body.retro-ios-theme .day-btn.active { background: linear-gradient(135deg, #667eea, #764ba2); color: white; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); }
+        body.retro-ios-theme .building-btn { background: rgba(102, 126, 234, 0.1); border: none; color: #667eea; border-radius: 10px; font-weight: 500; }
+        body.retro-ios-theme .building-btn.active { background: linear-gradient(135deg, #667eea, #764ba2); color: white; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); }
+        body.retro-ios-theme .filter-btn { background: rgba(102, 126, 234, 0.1); border: none; color: #667eea; border-radius: 10px; font-weight: 500; }
+        body.retro-ios-theme .filter-btn.active { background: linear-gradient(135deg, #667eea, #764ba2); color: white; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); }
+        body.retro-ios-theme .search-box { background: rgba(255, 255, 255, 0.95); border: none; color: #000; border-radius: 10px; backdrop-filter: saturate(180%) blur(20px); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        body.retro-ios-theme .room-card { background: rgba(255, 255, 255, 0.95); border: none; box-shadow: 0 4px 20px rgba(0,0,0,0.08); backdrop-filter: saturate(180%) blur(20px); border-radius: 16px; }
+        body.retro-ios-theme .room-name { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 600; }
+        body.retro-ios-theme .room-meta { color: #8e8e93; }
+        body.retro-ios-theme .room-current-info { color: #8e8e93; }
+        body.retro-ios-theme .modal-content { background: rgba(255, 255, 255, 0.98); border: none; box-shadow: 0 20px 60px rgba(0,0,0,0.15); backdrop-filter: saturate(180%) blur(30px); }
+        body.retro-ios-theme .modal-title { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 600; }
+        body.retro-ios-theme .schedule-item { background: rgba(102, 126, 234, 0.08); border-left-color: #667eea; }
+        body.retro-ios-theme .schedule-time { color: #667eea; font-weight: 500; }
+        body.retro-ios-theme .schedule-course { color: #8e8e93; }
+        body.retro-ios-theme .export-btn { background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); }
+        body.retro-ios-theme .equipment-title { color: #8e8e93; }
+        body.retro-ios-theme .equipment-item { color: #aeaeb2; }
 
-        /* NES THEME - Powerglove */
-        body.nes-theme {
-            background: #000000;
-            font-family: 'Courier New', monospace;
+        /* Valentines Theme 💝 */
+        body.valentines-theme {
+            background: linear-gradient(135deg, #FFB6C1 0%, #FFE4E1 50%, #FF1493 100%);
+            position: relative;
         }
-        body.nes-theme .header {
-            background: #FFFFFF;
-            border: 4px solid #000000;
-            border-radius: 0;
-            box-shadow: 8px 8px 0 rgba(0,0,0,0.3);
+        body.valentines-theme::before {
+            content: '💝';
+            position: fixed;
+            top: 10%;
+            left: 10%;
+            font-size: 100px;
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+            pointer-events: none;
         }
-        body.nes-theme h1 {
-            color: #FC0000;
-            text-shadow: 4px 4px 0 #000000;
-            font-size: 28px;
+        body.valentines-theme::after {
+            content: '💕';
+            position: fixed;
+            bottom: 15%;
+            right: 15%;
+            font-size: 80px;
+            opacity: 0.1;
+            animation: float 8s ease-in-out infinite;
+            pointer-events: none;
         }
-        body.nes-theme .current-time {
-            color: #000000;
-            font-family: 'Courier New', monospace;
-            font-weight: 900;
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
         }
-        body.nes-theme .building-btn {
-            background: #FFFFFF;
-            border: 3px solid #000000;
-            border-radius: 0;
-            font-family: 'Courier New', monospace;
-            font-weight: 900;
-        }
-        body.nes-theme .building-btn.active {
-            background: #FC0000;
-            color: #FFFFFF;
-            border-color: #000000;
-            box-shadow: 4px 4px 0 #000000;
-        }
-        body.nes-theme .day-btn {
-            background: #FFFFFF;
-            border: 3px solid #000000;
-            border-radius: 0;
-        }
-        body.nes-theme .day-btn.active {
-            background: #FC0000;
-            color: #FFFFFF;
-            border-color: #000000;
-        }
-        body.nes-theme .room-card {
-            background: #FFFFFF;
-            border: 4px solid #000000;
-            border-radius: 0;
-            box-shadow: 6px 6px 0 #000000;
-        }
-        body.nes-theme .room-number {
-            color: #FC0000;
-            font-family: 'Courier New', monospace;
-        }
-        body.nes-theme .pin-btn::before { content: '🎮'; }
-
-        /* iOS Web App Scrolling Fix */
-        #betaOverlay {
-            -webkit-overflow-scrolling: touch;
-            overflow-y: scroll;
-        }
-        #betaMenu {
-            max-height: 85vh;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
+        body.valentines-theme header { background: rgba(255, 20, 147, 0.95); border-bottom: 3px solid #FF69B4; box-shadow: 0 4px 20px rgba(255, 20, 147, 0.4); }
+        body.valentines-theme .logo h1 { color: white; text-shadow: 2px 2px 0 #FF1493, 4px 4px 0 #C71585, 0 0 20px #FFB6C1; font-weight: 900; }
+        body.valentines-theme .jsu-badge { background: linear-gradient(135deg, #FF1493, #C71585); color: white; border: 2px solid #FFB6C1; box-shadow: 0 0 20px rgba(255, 20, 147, 0.6); }
+        body.valentines-theme .clock { background: rgba(255, 255, 255, 0.95); border: 3px solid #FF69B4; box-shadow: 0 4px 20px rgba(255, 105, 180, 0.4); }
+        body.valentines-theme .time { color: #FF1493; text-shadow: 1px 1px 0 #FFB6C1; font-weight: 700; }
+        body.valentines-theme .date { color: #C71585; }
+        body.valentines-theme .controls { background: rgba(255, 255, 255, 0.95); border: 3px solid #FF69B4; box-shadow: 0 4px 20px rgba(255, 105, 180, 0.3); }
+        body.valentines-theme .day-btn { background: rgba(255, 182, 193, 0.3); border: 2px solid #FFB6C1; color: #C71585; }
+        body.valentines-theme .day-btn.active { background: linear-gradient(135deg, #FF1493, #FF69B4); color: white; border-color: #FF1493; box-shadow: 0 4px 15px rgba(255, 20, 147, 0.5); }
+        body.valentines-theme .building-btn { background: rgba(255, 182, 193, 0.3); border: 2px solid #FFB6C1; color: #C71585; }
+        body.valentines-theme .building-btn.active { background: linear-gradient(135deg, #FF1493, #FF69B4); color: white; box-shadow: 0 4px 15px rgba(255, 20, 147, 0.5); }
+        body.valentines-theme .filter-btn { background: rgba(255, 182, 193, 0.3); border: 2px solid #FFB6C1; color: #C71585; }
+        body.valentines-theme .filter-btn.active { background: linear-gradient(135deg, #FF1493, #FF69B4); color: white; box-shadow: 0 4px 15px rgba(255, 20, 147, 0.5); }
+        body.valentines-theme .search-box { background: rgba(255, 255, 255, 0.9); border: 2px solid #FFB6C1; color: #C71585; }
+        body.valentines-theme .room-card { background: rgba(255, 255, 255, 0.95); border: 3px solid #FF69B4; box-shadow: 0 4px 20px rgba(255, 105, 180, 0.3); }
+        body.valentines-theme .room-name { color: #FF1493; font-weight: 900; }
+        body.valentines-theme .room-meta { color: #C71585; }
+        body.valentines-theme .room-current-info { color: #C71585; }
+        body.valentines-theme .modal-content { background: rgba(255, 255, 255, 0.98); border: 4px solid #FF69B4; box-shadow: 0 10px 40px rgba(255, 20, 147, 0.4); }
+        body.valentines-theme .modal-title { color: #FF1493; text-shadow: 1px 1px 0 #FFB6C1; font-weight: 900; }
+        body.valentines-theme .schedule-item { background: rgba(255, 182, 193, 0.3); border-left-color: #FF1493; }
+        body.valentines-theme .schedule-time { color: #FF1493; font-weight: 700; }
+        body.valentines-theme .schedule-course { color: #C71585; }
+        body.valentines-theme .export-btn { background: linear-gradient(135deg, #FF1493, #FF69B4); color: white; box-shadow: 0 4px 15px rgba(255, 20, 147, 0.5); }
+        body.valentines-theme .equipment-title { color: #C71585; }
+        body.valentines-theme .equipment-item { color: #DB7093; }
     </style>
 </head>
 <body>
@@ -1708,29 +1753,14 @@
         </div>
     </div>
 
-    <!-- Beta Menu -->
+    <!-- Settings Menu -->
     <div class="beta-overlay" id="betaOverlay"></div>
     <div class="beta-menu" id="betaMenu">
-        <div id="betaKeypad">
-            <h2 style="text-align: center; margin-bottom: 10px;">Enter Code</h2>
-            <div class="pin-display" id="pinDisplay">____</div>
-            <div class="keypad">
-                <button class="keypad-btn" onclick="enterPin('1')">1</button>
-                <button class="keypad-btn" onclick="enterPin('2')">2</button>
-                <button class="keypad-btn" onclick="enterPin('3')">3</button>
-                <button class="keypad-btn" onclick="enterPin('4')">4</button>
-                <button class="keypad-btn" onclick="enterPin('5')">5</button>
-                <button class="keypad-btn" onclick="enterPin('6')">6</button>
-                <button class="keypad-btn" onclick="enterPin('7')">7</button>
-                <button class="keypad-btn" onclick="enterPin('8')">8</button>
-                <button class="keypad-btn" onclick="enterPin('9')">9</button>
-                <button class="keypad-btn" onclick="clearPin()">C</button>
-                <button class="keypad-btn" onclick="enterPin('0')">0</button>
-                <button class="keypad-btn" onclick="closeBeta()">✕</button>
-            </div>
+        <div id="betaKeypad" style="display: none;">
+            <!-- Hidden for compatibility -->
         </div>
         <div class="beta-settings" id="betaSettings">
-            <h2 style="text-align: center; margin-bottom: 20px;">Beta Settings</h2>
+            <h2 style="text-align: center; margin-bottom: 20px;">Settings</h2>
             
             <div class="setting-item">
                 <span>AV Documentation</span>
@@ -1738,16 +1768,15 @@
             </div>
 
             <div class="profile-select">
-                <h3 style="margin-bottom: 15px;">Select Profile</h3>
-                <button class="profile-btn" onclick="setProfile('default')">Default</button>
-                <button class="profile-btn" onclick="setProfile('hacker')">Hacker</button>
+                <h3 style="margin-bottom: 15px;">Select Theme</h3>
+                <button class="profile-btn" onclick="setProfile('cocky')">Stay Cocky</button>
                 <button class="profile-btn" onclick="setProfile('southerners')">Southerners</button>
-                <button class="profile-btn" onclick="setProfile('gamecock')">Gamecock Pride</button>
+                <button class="profile-btn" onclick="setProfile('valentines')">💝 Valentines</button>
                 <button class="profile-btn" onclick="setProfile('terminal')">Terminal</button>
-                <button class="profile-btn" onclick="setProfile('minimal')">Minimal Dark</button>
+                <button class="profile-btn" onclick="setProfile('oled')">OLED</button>
                 <button class="profile-btn" onclick="setProfile('newspaper')">Newspaper</button>
-                <button class="profile-btn" onclick="setProfile('jobs')">Classic Mac</button>
-                <button class="create-profile-btn" onclick="alert('Profile creation coming soon! For now, contact your admin to add custom profiles.')">+ Create New Profile</button>
+                <button class="profile-btn" onclick="setProfile('jobs')">Jobs</button>
+                <button class="profile-btn" onclick="setProfile('wozniak')">Wozniak</button>
             </div>
 
             <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #ddd;">
@@ -1760,6 +1789,92 @@
     </div>
 
     <script>
+        // Room Equipment Data (from AV documentation)
+        const ROOM_EQUIPMENT = {
+            // MAH
+            'MAH 105': ['Projector: Epson PowerLite', 'Screen: 100" Motorized', 'Ceiling speakers', 'Wireless mic', 'HDMI/VGA inputs'],
+            'MAH 111': ['Projector: 4K Laser', 'Screen: 120" Motorized', 'Surround sound system', 'Zoom Rooms kit', 'Document camera'],
+            'MAH 122': ['Interactive whiteboard: 86"', 'Projector: Short-throw', 'Wall speakers', 'Document camera', 'Wireless presentation'],
+            'MAH 129': ['Projector: Epson', 'Screen: 90" Fixed', 'Basic audio', 'HDMI input'],
+            'MAH 130': ['Projector: Standard', 'Screen: 100" Motorized', 'Ceiling speakers', 'Lapel mic'],
+            'MAH 142': ['Interactive display', 'Audio system', 'Web camera'],
+            'MAH 144': ['Projector: BenQ', 'Screen: 100" Motorized', 'Audio system'],
+            'MAH 214': ['Projector: Epson', 'Screen: 90" Fixed', 'Ceiling speakers'],
+            'MAH 222': ['Projector: Standard', 'Screen: 100" Pull-down', 'Basic audio'],
+            // Merrill
+            'Merrill 100': ['25x Dell 24" monitors', 'Bloomberg Terminal access', 'Ceiling speakers', 'Short-throw projector', 'HDMI matrix'],
+            'Merrill 101': ['Projector: Epson', 'Screen: 100" Motorized', 'Audio: 2.1 system'],
+            'Merrill 102': ['Projector: BenQ', 'Screen: 90" Fixed', 'Ceiling speakers'],
+            'Merrill 104': ['Interactive whiteboard', 'Projector: Short-throw', 'Soundbar'],
+            'Merrill 200': ['Projector: 4K', 'Screen: 120" Motorized', 'Surround sound', 'Wireless lapel mic'],
+            'Merrill 201': ['Projector: Epson', 'Screen: 100" Motorized', 'Audio system'],
+            'Merrill 202': ['Projector: Standard', 'Screen: 90" Fixed', 'Basic audio'],
+            'Merrill 204': ['Interactive display: 75"', 'Soundbar', 'Web camera'],
+            'Merrill B01': ['Projector: Epson PowerLite Pro', 'Screen: 120" Motorized', 'Surround sound', 'Wireless handheld mic', 'Podium controls'],
+            'Merrill B10': ['Projector: Laser 4K', 'Screen: 200" Motorized', 'Theater audio system', 'Stage lighting', 'Wireless mics (4)'],
+            // Brewer
+            'Brewer 102': ['Projector: Epson', 'Screen: 100" Motorized', 'Ceiling speakers', 'Document camera'],
+            'Brewer 103': ['Projector: BenQ', 'Screen: 90" Fixed', 'Audio: 2.1 system'],
+            'Brewer 217': ['Interactive whiteboard', 'Projector: Short-throw', 'Soundbar'],
+            'Brewer 218': ['Projector: Standard', 'Screen: 100" Pull-down', 'Ceiling speakers'],
+            'Brewer 328': ['Projector: 4K Laser', 'Screen: 150" Motorized', 'Surround sound', 'Wireless presentation', 'Lapel & handheld mics'],
+            'Brewer 330': ['Projector: Epson Ultra', 'Screen: 120" Motorized', 'Audio system', 'Wireless mic'],
+            // HCL
+            'HCL 1103A': ['Projector: Epson Ultra', 'Screen: 150" Motorized', 'Conference audio system', 'Wireless lapel mic', 'Zoom Rooms', 'PTZ camera'],
+            'HCL 1103B': ['Projector: BenQ', 'Screen: 120" Motorized', 'Audio system', 'Wireless mic'],
+            'HCL 1103C': ['Projector: Epson', 'Screen: 100" Motorized', 'Soundbar', 'HDMI wireless'],
+            // Stone
+            'Stone 301': ['Interactive display: 86"', 'Wireless HDMI', 'Soundbar', 'Web camera', 'Touch controls'],
+            'Stone 215': ['Projector: Epson', 'Screen: 100" Motorized', 'Ceiling speakers', 'Document camera'],
+            // McGee
+            'McGee 222': ['Projector: Standard', 'Screen: 100" Pull-down', 'Ceiling speakers', 'HDMI input'],
+            'McGee 114': ['Projector: BenQ', 'Screen: 90" Fixed', 'Audio: 2.1 system'],
+            // Rowe
+            'Rowe 215': ['Projector: Epson', 'Screen: 100" Motorized', 'Ceiling speakers', 'Wireless mic'],
+            'Rowe 301': ['Projector: 4K', 'Screen: 120" Motorized', 'Surround sound', 'Document camera']
+        };
+
+        // Room Metadata (capacity and type)
+        const ROOM_METADATA = {
+            // Merrill Hall (from PDF)
+            'Merrill B01': { capacity: 100, type: 'Classroom' },
+            'Merrill B02': { capacity: 50, type: 'Active Learning' },
+            'Merrill B10': { capacity: 450, type: 'Auditorium' },
+            'Merrill B15': { capacity: 50, type: 'Active Learning' },
+            'Merrill B18': { capacity: 50, type: 'Classroom' },
+            'Merrill 100': { capacity: 50, type: 'Finance Lab' },
+            'Merrill 105': { capacity: 50, type: 'Classroom' },
+            'Merrill 109': { capacity: 50, type: 'Classroom' },
+            'Merrill 110': { capacity: 70, type: 'Classroom' },
+            'Merrill 115': { capacity: 50, type: 'Classroom' },
+            'Merrill 116': { capacity: 50, type: 'Classroom' },
+            'Merrill 118': { capacity: 70, type: 'Classroom' },
+            'Merrill 200': { capacity: 70, type: 'Classroom' },
+            'Merrill 214': { capacity: 35, type: 'Classroom' },
+            'Merrill 218': { capacity: 35, type: 'Classroom' },
+            'Merrill 300': { capacity: 70, type: 'Classroom' },
+            // MAH (estimated)
+            'MAH 105': { capacity: 35, type: 'Classroom' },
+            'MAH 111': { capacity: 40, type: 'Lecture Hall' },
+            'MAH 122': { capacity: 30, type: 'Lab' },
+            'MAH 224': { capacity: 25, type: 'Classroom' },
+            // Brewer
+            'Brewer 328': { capacity: 50, type: 'Lecture Hall' },
+            'Brewer 219': { capacity: 35, type: 'Classroom' },
+            // Stone
+            'Stone 301': { capacity: 40, type: 'Smart Classroom' },
+            'Stone 215': { capacity: 30, type: 'Classroom' },
+            // HCL
+            'HCL 1103A': { capacity: 60, type: 'Conference Room' },
+            'HCL 2205': { capacity: 20, type: 'Study Room' },
+            // McGee
+            'McGee 222': { capacity: 35, type: 'Classroom' },
+            'McGee 114': { capacity: 28, type: 'Classroom' },
+            // Rowe
+            'Rowe 215': { capacity: 32, type: 'Classroom' },
+            'Rowe 301': { capacity: 38, type: 'Classroom' }
+        };
+
         // Schedule Data - Will be populated
         const SCHEDULE_DATA = {
   "Ayers": {
@@ -16384,30 +16499,30 @@
 
         // Profile configurations
         const PROFILES = {
-            'hacker': {
-                primaryBuildings: ['MAH', 'HCL', 'McGee', 'Rowe', 'Brewer', 'Merrill', 'Stone'],
-                theme: 'haisten-theme',
-                name: 'Hacker'
+            'cocky': {
+                primaryBuildings: null,
+                theme: '',
+                name: 'Stay Cocky'
             },
             'southerners': {
                 primaryBuildings: ['Merrill', 'Stone', 'Brewer', 'MAH', 'Rowe', 'HCL', 'McGee'],
-                theme: 'eric-theme',
+                theme: 'gamecock-theme',
                 name: 'Southerners'
             },
-            'gamecock': {
+            'valentines': {
                 primaryBuildings: null,
-                theme: 'gamecock-theme',
-                name: 'Gamecock Pride'
+                theme: 'valentines-theme',
+                name: '💝 Valentines'
             },
             'terminal': {
                 primaryBuildings: null,
                 theme: 'terminal-theme',
                 name: 'Terminal'
             },
-            'minimal': {
+            'oled': {
                 primaryBuildings: null,
                 theme: 'minimal-dark-theme',
-                name: 'Minimal Dark'
+                name: 'OLED'
             },
             'newspaper': {
                 primaryBuildings: null,
@@ -16416,13 +16531,13 @@
             },
             'jobs': {
                 primaryBuildings: null,
-                theme: 'jobs-theme',
-                name: 'Classic Mac'
+                theme: 'retro-ios-theme',
+                name: 'Jobs'
             },
-            'default': {
+            'wozniak': {
                 primaryBuildings: null,
-                theme: '',
-                name: 'Default'
+                theme: 'jobs-theme',
+                name: 'Wozniak'
             }
         };
 
@@ -16434,7 +16549,7 @@
         let pinnedRooms = JSON.parse(localStorage.getItem('pinnedRooms') || '[]');
         let betaEnabled = localStorage.getItem('betaEnabled') === 'true';
         let avEnabled = localStorage.getItem('avEnabled') === 'true';
-        let currentProfile = localStorage.getItem('currentProfile') || 'default';
+        let currentProfile = localStorage.getItem('currentProfile') || 'cocky';
         let showExtraBuildings = false;
 
         // Initialize
@@ -16732,6 +16847,9 @@
             card.onclick = () => openRoomModal(room, status);
 
             const isPinned = pinnedRooms.includes(`${currentBuilding}:${room}`);
+            const roomKey = `${currentBuilding} ${room}`;
+            const metadata = ROOM_METADATA[roomKey] || { capacity: '?', type: 'Room' };
+            const equipment = ROOM_EQUIPMENT[roomKey] || [];
             
             let currentClassText = '';
             if (status.currentClass) {
@@ -16741,9 +16859,22 @@
                 currentClassText = `${status.schedule.length} classes today`;
             }
 
+            const equipmentHTML = avEnabled && equipment.length > 0 ? `
+                <div class="room-equipment">
+                    <div class="equipment-title">📡 Equipment</div>
+                    ${equipment.map(item => `<div class="equipment-item">${item}</div>`).join('')}
+                </div>
+            ` : '';
+
             card.innerHTML = `
                 <div class="room-header">
-                    <div class="room-name">${currentBuilding} ${room}</div>
+                    <div class="room-info-header">
+                        <div class="room-name">${currentBuilding} ${room}</div>
+                        <div class="room-meta">
+                            <span class="capacity">👥 ${metadata.capacity}</span>
+                            <span class="room-type">${metadata.type}</span>
+                        </div>
+                    </div>
                     <button class="pin-btn" onclick="event.stopPropagation(); togglePin('${currentBuilding}', '${room}')">
                         ${isPinned ? '⭐' : '☆'}
                     </button>
@@ -16751,9 +16882,10 @@
                 <div class="room-status ${status.isAvailable ? 'available' : 'occupied'}">
                     ${status.statusText}
                 </div>
-                <div class="room-info">
+                <div class="room-current-info">
                     ${currentClassText}
                 </div>
+                ${equipmentHTML}
             `;
 
             return card;
@@ -17010,19 +17142,19 @@
             const config = PROFILES[profile];
             document.body.className = config.theme;
             
-            // Update active profile button in beta menu
+            // Update active profile button in settings menu
             setTimeout(() => {
                 document.querySelectorAll('.profile-btn').forEach(btn => {
                     btn.classList.remove('active');
                     const btnText = btn.textContent.toLowerCase();
-                    if ((profile === 'hacker' && btnText.includes('hacker')) ||
+                    if ((profile === 'cocky' && btnText.includes('cocky')) ||
                         (profile === 'southerners' && btnText.includes('southerners')) ||
-                        (profile === 'gamecock' && btnText.includes('gamecock')) ||
+                        (profile === 'valentines' && btnText.includes('valentines')) ||
                         (profile === 'terminal' && btnText.includes('terminal')) ||
-                        (profile === 'minimal' && btnText.includes('minimal')) ||
+                        (profile === 'oled' && btnText.includes('oled')) ||
                         (profile === 'newspaper' && btnText.includes('newspaper')) ||
-                        (profile === 'jobs' && btnText.includes('classic')) ||
-                        (profile === 'default' && btnText === 'default')) {
+                        (profile === 'jobs' && btnText === 'jobs') ||
+                        (profile === 'wozniak' && btnText.includes('wozniak'))) {
                         btn.classList.add('active');
                     }
                 });
@@ -17063,10 +17195,16 @@
                         <span>${building}</span>
                     `;
                     
+                    // Desktop drag events
                     item.addEventListener('dragstart', handleDragStart);
                     item.addEventListener('dragover', handleDragOver);
                     item.addEventListener('drop', handleDrop);
                     item.addEventListener('dragend', handleDragEnd);
+                    
+                    // Mobile touch events
+                    item.addEventListener('touchstart', handleTouchStart, {passive: false});
+                    item.addEventListener('touchmove', handleTouchMove, {passive: false});
+                    item.addEventListener('touchend', handleTouchEnd);
                     
                     list.appendChild(item);
                 }
@@ -17078,6 +17216,49 @@
 
         function closeReorder() {
             document.getElementById('reorderModal').style.display = 'none';
+        }
+
+        let touchedElement = null;
+        let touchY = 0;
+
+        function handleTouchStart(e) {
+            touchedElement = e.currentTarget;
+            const touch = e.touches[0];
+            touchY = touch.clientY;
+            touchedElement.style.opacity = '0.4';
+            e.preventDefault();
+        }
+
+        function handleTouchMove(e) {
+            if (!touchedElement) return;
+            e.preventDefault();
+            
+            const touch = e.touches[0];
+            const currentY = touch.clientY;
+            
+            // Find element under touch point
+            const elementAtPoint = document.elementFromPoint(touch.clientX, touch.clientY);
+            const targetItem = elementAtPoint?.closest('.reorder-item');
+            
+            if (targetItem && targetItem !== touchedElement) {
+                const list = document.getElementById('buildingReorderList');
+                const allItems = [...list.querySelectorAll('.reorder-item')];
+                const touchedIndex = allItems.indexOf(touchedElement);
+                const targetIndex = allItems.indexOf(targetItem);
+                
+                if (touchedIndex < targetIndex) {
+                    targetItem.after(touchedElement);
+                } else {
+                    targetItem.before(touchedElement);
+                }
+            }
+        }
+
+        function handleTouchEnd(e) {
+            if (touchedElement) {
+                touchedElement.style.opacity = '1';
+                touchedElement = null;
+            }
         }
 
         function handleDragStart(e) {
