@@ -662,6 +662,29 @@
       #clock-time { font-size: 36px; }
       #rooms-grid { grid-template-columns: repeat(2, 1fr); }
     }
+
+    /* ── ICS EXPORT ── */
+    #export-btn {
+      width: 100%;
+      padding: 11px 16px;
+      background: transparent;
+      border: 1px solid var(--border-bright);
+      color: var(--accent);
+      border-radius: var(--radius);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      transition: background 0.15s, color 0.15s;
+      letter-spacing: 0.03em;
+    }
+    #export-btn:hover { background: var(--accent-glow); }
+    #export-btn:active { opacity: 0.75; }
+    .export-card { display: flex; flex-direction: column; gap: 6px; }
+    .export-note { font-size: 11px; color: var(--text-dim); text-align: center; }
   </style>
 </head>
 <body>
@@ -731,6 +754,12 @@
     <div id="detail-schedule-card">
       <div class="schedule-heading" id="detail-schedule-heading">SCHEDULE</div>
       <div id="detail-slots"></div>
+    </div>
+    <div class="settings-card export-card">
+      <button id="export-btn" onclick="exportFreeICS()">
+        📅 Download Free Times (.ics)
+      </button>
+      <div class="export-note" id="export-note"></div>
     </div>
   </div>
 </div>
@@ -1045,6 +1074,133 @@ function showDetail(bldg, room) {
   document.getElementById("detail-view").classList.remove("hidden");
   document.getElementById("detail-view").classList.add("visible");
   window.scrollTo(0,0);
+  // Update export button note
+  const freeWins = getFreeSlots(bldg, room, state.day);
+  const expNote = document.getElementById("export-note");
+  if (expNote) {
+    if (freeWins.length === 0) {
+      expNote.textContent = "No free windows today";
+      expNote.style.color = "var(--text-dim)";
+    } else {
+      expNote.textContent = `${freeWins.length} free window${freeWins.length > 1 ? "s" : ""} on ${state.day}`;
+      expNote.style.color = "var(--text-dim)";
+    }
+  }
+}
+
+
+// ── ICS EXPORT ──
+function getFreeSlots(bldg, room, day) {
+  const slots = (SCHEDULE[bldg]?.[room] || [])
+    .filter(s => s.day === day)
+    .sort((a, b) => toMins(a.s) - toMins(b.s));
+
+  // Day bounds: 7:00 AM – 10:00 PM
+  const DAY_START = "07:00";
+  const DAY_END   = "22:00";
+
+  const free = [];
+  let cursor = DAY_START;
+
+  for (const slot of slots) {
+    if (toMins(slot.s) > toMins(cursor)) {
+      free.push({ s: cursor, e: slot.s });
+    }
+    if (toMins(slot.e) > toMins(cursor)) {
+      cursor = slot.e;
+    }
+  }
+  // Trailing gap
+  if (toMins(cursor) < toMins(DAY_END)) {
+    free.push({ s: cursor, e: DAY_END });
+  }
+  return free;
+}
+
+function icsDateStr(dateObj, timeStr) {
+  // Returns iCal DTSTART/DTEND local string: 20260216T090000
+  const y  = dateObj.getFullYear();
+  const mo = String(dateObj.getMonth() + 1).padStart(2, "0");
+  const d  = String(dateObj.getDate()).padStart(2, "0");
+  const [h, m] = timeStr.split(":");
+  return `${y}${mo}${d}T${h}${m}00`;
+}
+
+function exportFreeICS() {
+  if (!state.detailRoom) return;
+  const { bldg, room } = state.detailRoom;
+  const day  = state.day;
+  const free = getFreeSlots(bldg, room, day);
+
+  const note = document.getElementById("export-note");
+
+  if (free.length === 0) {
+    note.textContent = "No free windows found for this day.";
+    note.style.color = "var(--red-alert, #ef4444)";
+    return;
+  }
+
+  // Map day name to next upcoming date (from today)
+  const DAY_IDX = { Sunday:0, Monday:1, Tuesday:2, Wednesday:3, Thursday:4, Friday:5, Saturday:6 };
+  const today   = new Date();
+  today.setHours(0, 0, 0, 0);
+  const todayIdx = today.getDay();
+  const targetIdx = DAY_IDX[day];
+  let diff = targetIdx - todayIdx;
+  if (diff < 0) diff += 7;
+  const eventDate = new Date(today);
+  eventDate.setDate(today.getDate() + diff);
+
+  // Stamp for DTSTAMP (UTC now)
+  const now = new Date();
+  const stamp = now.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+
+  const bldgLabel = BLDG_NAMES[bldg] || bldg;
+  const summary   = `Room free – ${bldgLabel} ${room}`;
+  const location  = `${bldgLabel}, Room ${room}, Jacksonville State University`;
+
+  let ics = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//JSU Room Tracker//EN",
+    "CALSCALE:GREGORIAN",
+    "METHOD:PUBLISH",
+  ];
+
+  free.forEach((slot, i) => {
+    const dtStart = icsDateStr(eventDate, slot.s);
+    const dtEnd   = icsDateStr(eventDate, slot.e);
+    const uid     = `jsu-room-${bldg}-${room}-${day}-${i}-${stamp}@jsu.edu`;
+    ics = ics.concat([
+      "BEGIN:VEVENT",
+      `UID:${uid}`,
+      `DTSTAMP:${stamp}`,
+      `DTSTART:${dtStart}`,
+      `DTEND:${dtEnd}`,
+      `SUMMARY:${summary}`,
+      `LOCATION:${location}`,
+      `DESCRIPTION:${bldgLabel} Room ${room} is unscheduled on ${day} from ${fmt12(slot.s)} to ${fmt12(slot.e)}. Spring 2026 schedule.`,
+      "STATUS:CONFIRMED",
+      "TRANSP:TRANSPARENT",
+      "END:VEVENT",
+    ]);
+  });
+
+  ics.push("END:VCALENDAR");
+
+  const blob = new Blob([ics.join("\r\n")], { type: "text/calendar;charset=utf-8" });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement("a");
+  a.href     = url;
+  a.download = `${bldg}-${room}-${day}-free.ics`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  note.style.color = "var(--green)";
+  note.textContent = `✓ ${free.length} free window${free.length > 1 ? "s" : ""} exported (${day})`;
+  setTimeout(() => { note.textContent = ""; }, 4000);
 }
 
 function hideDetail() {
